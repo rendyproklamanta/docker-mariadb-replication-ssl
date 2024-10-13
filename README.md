@@ -51,7 +51,7 @@ ufw allow 8989
 - Generate ssl
 
 ```shell
-cd /var/lib/mariadb/certs
+cd /var/lib/mariadb/tls
 chmod +x generate.sh && ./generate.sh
 ```
 

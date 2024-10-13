@@ -41,7 +41,7 @@ CHANGE MASTER TO
     MASTER_PASSWORD='$REPL_PASSWORD',
     MASTER_LOG_FILE='$log',
     MASTER_LOG_POS=$position,
-    MASTER_CONNECT_RETRY=10;
+    MASTER_CONNECT_RETRY=10,
     MASTER_SSL=1,
     MASTER_SSL_CA='/etc/my.cnf.d/tls/ca-cert.pem',
     MASTER_SSL_CERT='/etc/my.cnf.d/tls/client-cert.pem',
