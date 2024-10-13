@@ -15,7 +15,7 @@ services:
         max_attempts: 2
     volumes:
       - ./conf/maxscale.cnf:/etc/maxscale.cnf
-      - ./tls:/etc/maxscale
+      - ./tls:/etc/maxscale/tls
     ports:
       - 6033:6033
       - 8989:8989

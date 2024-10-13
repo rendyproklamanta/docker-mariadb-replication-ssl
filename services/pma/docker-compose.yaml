@@ -10,7 +10,7 @@ services:
       MAX_EXECUTION_TIME: 1000
       PMA_ABSOLUTE_URI: https://pma.secure.domain.com
     volumes:
-      - ./tls:/etc/phpmyadmin
+      - ./tls:/etc/phpmyadmin/tls
       - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
     deploy:
       replicas: 1

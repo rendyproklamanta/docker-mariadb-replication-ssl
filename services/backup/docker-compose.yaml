@@ -28,7 +28,7 @@ services:
       MYSQL_SSL_OPTS: "--ssl-ca=/etc/my.cnf.d/tls/ca-cert.pem --ssl-cert=/etc/my.cnf.d/tls/client-cert.pem --ssl-key=/etc/my.cnf.d/tls/client-key.pem"
     volumes:
       - /backup/mariadb:/backup
-      - ./tls/:/etc/my.cnf.d
+      - ./tls:/etc/my.cnf.d/tls
     networks:
       - mariadb-network
 

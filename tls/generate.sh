@@ -25,8 +25,12 @@ openssl x509 -req -in maxscale-req.pem -days 365 -CA ca-cert.pem -CAkey ca-key.p
 # Remove request
 rm -rf *-req.pem
 
+# give permission
+chmod -R 755 $BASE_DIR/tls
+
 # Copy directory tls to each nodes and maxscale
-rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls $BASE_DIR/nodes/master/tls
-rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls $BASE_DIR/nodes/slave1/tls
-rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls $BASE_DIR/services/maxscale/tls
-rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls $BASE_DIR/services/pma/tls
+rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls/ $BASE_DIR/nodes/master/tls/
+rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls/ $BASE_DIR/nodes/slave1/tls/
+rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls/ $BASE_DIR/services/maxscale/tls/
+rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls/ $BASE_DIR/services/pma/tls/
+rsync -av --include='*/' --include='*.pem' --exclude='*' $BASE_DIR/tls/ $BASE_DIR/services/backup/tls/

@@ -26,7 +26,7 @@ services:
       - /data/mariadb/slave1:/var/lib/mysql
       - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - ./conf/tls.cnf:/etc/my.cnf.d/tls.cnf:ro
-      - ./tls:/etc/my.cnf.d
+      - ./tls:/etc/my.cnf.d/tls
       - ./initdb:/docker-entrypoint-initdb.d
     ports:
       - 3302:3302
