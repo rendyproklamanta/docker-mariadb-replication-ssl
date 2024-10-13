@@ -8,7 +8,8 @@ container_id=$(docker ps -q -f name=$HOST_MASTER)
 
 # Fetch master status
 result=$(docker exec $container_id \
-  mariadb -uroot --password=$MASTER_ROOT_PASSWORD --port=$PORT_MASTER \
+  mariadb -uroot --password="YOUR_PASSWORD" --port=3301 \
+  --ssl-ca=/etc/my.cnf.d/tls/ca-cert.pem --ssl-cert=/etc/my.cnf.d/tls/client-cert.pem --ssl-key=/etc/my.cnf.d/tls/client-key.pem \
   --execute="SHOW MASTER STATUS\G")
   
 # Extract the log file and position

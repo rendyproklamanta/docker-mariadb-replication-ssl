@@ -33,6 +33,3 @@ thread_handling         = pool-of-threads
 thread_pool_size        = 4
 thread_pool_stall_limit = 60
 slave_parallel_threads  = 4
-
-# Optional: Enforce SSL for all incoming connections
-require_secure_transport=ON
