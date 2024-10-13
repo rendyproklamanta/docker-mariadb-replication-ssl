@@ -25,7 +25,7 @@ mkdir -p /var/lib/mariadb
 
 ```shell
 cd /var/lib/mariadb
-git clone https://github.com/rendyproklamanta/docker-mariadb-replication.git .
+git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```
 
 - Change Password by using text replacing tool
