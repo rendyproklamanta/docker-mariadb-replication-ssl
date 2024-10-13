@@ -26,7 +26,7 @@ openssl x509 -req -in maxscale-req.pem -days 365 -CA ca-cert.pem -CAkey ca-key.p
 rm -rf *-req.pem
 
 # Copy directory certs to each nodes and maxscale
-rsync -av --exclude='generate.sh' $BASE_DIR/certs $BASE_DIR/nodes/master/certs
-rsync -av --exclude='generate.sh' $BASE_DIR/certs $BASE_DIR/nodes/master/certs
-rsync -av --exclude='generate.sh' $BASE_DIR/certs $BASE_DIR/services/maxscale/certs
-rsync -av --exclude='generate.sh' $BASE_DIR/certs $BASE_DIR/services/pma/certs
+rsync -av --include='*.pem' --exclude='*' $BASE_DIR/certs $BASE_DIR/nodes/master/certs
+rsync -av --include='*.pem' --exclude='*' $BASE_DIR/certs $BASE_DIR/nodes/master/certs
+rsync -av --include='*.pem' --exclude='*' $BASE_DIR/certs $BASE_DIR/services/maxscale/certs
+rsync -av --include='*.pem' --exclude='*' $BASE_DIR/certs $BASE_DIR/services/pma/certs
