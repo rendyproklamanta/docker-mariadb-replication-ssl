@@ -1,0 +1,6 @@
+[client]
+ssl
+ssl-ca = /etc/my.cnf.d/tls/ca-cert.pem
+ssl-cert = /etc/my.cnf.d/tls/client-cert.pem
+ssl-key = /etc/my.cnf.d/tls/client-key.pem
+ssl-verify-server-cert = OFF   # Set to OFF to disable server certificate verification
