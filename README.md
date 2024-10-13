@@ -4,7 +4,7 @@
 
 ## Stacks
 
-- MariaDB 10.x
+- MariaDB 11.x
 - Docker
 - Maxscale
 
@@ -70,12 +70,7 @@ sudo journalctl -u mariadb-repl.service
 
 ## Rolling user password
 
-```shell
-cd services/credential-rolling
-cd users
-nano docker-compose.userxx.yaml
-chmod +x init.sh && ./init.sh
-```
+<https://github.com/rendyproklamanta/docker-mysql-credential-rolling>
 
 ## Access
 
@@ -129,4 +124,47 @@ pass : mariadb
 ```shell
 cd resync
 chmod +x main.sh && ./main.sh
+```
+
+## Mount local volume *certs* directory to your container
+
+```yml
+volumes:
+   - /var/lib/mariadb/certs:/usr/share/nginx/html/application/third_party/db_certs/prod
+```
+
+## How to connect from mysql client to server using SSL
+
+- Generate SSL for development only
+
+```shell
+cd /var/lib/mariadb/certs
+chmod +x generate-dev.sh && ./generate-dev.sh
+```
+
+- Then copy all *.pem files to your local development
+
+## Example fo use (CI3 database.php)
+
+```php
+$ssl_settings = array();
+
+if (ENVIRONMENT === 'development') {
+    $ssl_settings = array(
+      'ssl_key' => realpath('./application/third_party/db_certs/dev/client-key.pem'),
+      'ssl_cert' => realpath('./application/third_party/db_certs/dev/client-cert.pem'),
+      'ssl_ca' => realpath('./application/third_party/db_certs/dev/ca-cert.pem'),
+    );
+} else {
+    $ssl_settings = array(
+      'ssl_key' => realpath('./application/third_party/db_certs/prod/client-key.pem'),
+      'ssl_cert' => realpath('./application/third_party/db_certs/prod/client-cert.pem'),
+      'ssl_ca' => realpath('./application/third_party/db_certs/prod/ca-cert.pem'),
+    );
+}
+
+$db['default'] = array(
+   ... # Other configs
+   'ssl_set' => $ssl_settings # Add this line
+)
 ```
