@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  mariadb-cron-backup:
+    image: fradelg/mysql-cron-backup
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        delay: 1s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
+        max_attempts: 2
+    secrets:
+      - db_super_user
+      - db_super_paswd
+    environment:
+      TZ: "Asia/Jakarta"
+      MYSQL_PORT: "6033"
+      MYSQL_HOST: "mariadb_maxscale"
+      MYSQL_USER_FILE: "/run/secrets/db_super_user"
+      MYSQL_PASS_FILE: "/run/secrets/db_super_paswd"
+      MAX_BACKUPS: "4"
+      INIT_BACKUP: "0"
+      CRON_TIME: "0 */6 * * *"
+      MYSQL_SSL_OPTS: "--ssl-ca=/etc/my.cnf.d/tls/ca-cert.pem --ssl-cert=/etc/my.cnf.d/tls/client-cert.pem --ssl-key=/etc/my.cnf.d/tls/client-key.pem"
+    volumes:
+      - /backup/mariadb:/backup
+      - ./certs/:/etc/my.cnf.d/tls/
+    networks:
+      - mariadb-network
+
+secrets:
+  db_super_user:
+    external: true
+  db_super_paswd:
+    external: true
+
+networks:
+  mariadb-network:
+    external: true

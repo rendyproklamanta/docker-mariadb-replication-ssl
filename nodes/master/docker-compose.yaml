@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  mariadb-master:
+    image: mariadb:11
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        delay: 1s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
+        max_attempts: 2
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+    secrets:
+      - db_master_paswd
+    environment:
+      TZ: $TIMEZONE
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_master_paswd
+    volumes:
+      - /data/mariadb/master:/var/lib/mysql
+      - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+      - ./conf/tls.cnf:/etc/my.cnf.d/tls.cnf:ro
+      - ./certs/:/etc/my.cnf.d/tls/
+      - ./initdb:/docker-entrypoint-initdb.d
+    ports:
+      - 3301:3301
+    networks:
+      - mariadb-network
+
+secrets:
+  db_master_paswd:
+    external: true
+
+networks:
+  mariadb-network:
+    external: true

@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  maxscale:
+    image: mariadb/maxscale:latest
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        delay: 1s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
+        max_attempts: 2
+    volumes:
+      - ./conf/maxscale.cnf:/etc/maxscale.cnf
+      - ./certs:/etc/maxscale/certs
+    ports:
+      - 6033:6033
+      - 8989:8989
+    networks:
+      - mariadb-network
+
+networks:
+  mariadb-network:
+    external: true

@@ -1,0 +1,4 @@
+# Ignore dir
+nodes/*/data
+nodes/*/initdb
+services/*/data

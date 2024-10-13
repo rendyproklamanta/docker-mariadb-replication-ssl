@@ -1,0 +1,66 @@
+services:
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      TZ: Asia/Jakarta
+      PMA_HOST: mariadb_maxscale
+      PMA_PORT: 6033
+      UPLOAD_LIMIT: 2G
+      MEMORY_LIMIT: 500M
+      MAX_EXECUTION_TIME: 1000
+      PMA_ABSOLUTE_URI: https://pma.secure.domain.com
+    volumes:
+      - ./certs:/etc/phpmyadmin/certs
+      - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        delay: 1s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
+        max_attempts: 2
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.lbswarm=true"
+        - "traefik.docker.network=traefik-network"
+
+        # http
+        - "traefik.http.routers.phpmyadmin-http.rule=Host(`pma.secure.domain.com`)"
+        - "traefik.http.routers.phpmyadmin-http.entrypoints=web"
+
+        # https
+        - "traefik.http.routers.phpmyadmin.rule=Host(`pma.secure.domain.com`)"
+        - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+        - "traefik.http.routers.phpmyadmin.tls=true"
+        - "traefik.http.routers.phpmyadmin.tls.options=default"
+        - "traefik.http.routers.phpmyadmin.tls.certresolver=le"
+
+        # Service
+        - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie=true"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.httpOnly=true"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.name=pma"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.secure=true"
+
+        # Middleware for http
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+        - "traefik.http.routers.phpmyadmin-http.middlewares=redirect-to-https"
+
+        # Middleware for https
+        - "traefik.http.routers.phpmyadmin.middlewares=default-middlewares@file"
+
+        # Middleware basicauth
+        - "traefik.http.routers.phpmyadmin.middlewares=pma-auth"
+        - "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password"
+    networks:
+      - mariadb-network
+      - traefik-network
+
+networks:
+  mariadb-network:
+    external: true
+  traefik-network:
+    external: true
