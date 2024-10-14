@@ -52,6 +52,7 @@ ufw allow 8989
 
 ```shell
 cd /var/lib/mariadb/tls
+nano generate.sh >>> change domain.com as server certificate to use in production
 chmod +x generate.sh && ./generate.sh
 ```
 

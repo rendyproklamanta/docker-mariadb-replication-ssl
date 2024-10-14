@@ -2,7 +2,8 @@ version: "3.9"
 
 services:
   mariadb-slave1:
-    image: mariadb:11
+    image: mariadb:lts
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
     deploy:
       replicas: 1
       update_config:
@@ -13,15 +14,13 @@ services:
         delay: 5s
         window: 120s
         max_attempts: 2
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "512M"
-    secrets:
-      - db_slave1_paswd
+      # resources:
+      #   limits:
+      #     cpus: "0.5"
+      #     memory: "512M"
     environment:
-      TZ: $TIMEZONE
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_slave1_paswd
+      TZ: Asia/Jakarta
+      MYSQL_ROOT_PASSWORD_FILE: SLAVE1_ROOT_PASSWORD_SET
     volumes:
       - /data/mariadb/slave1:/var/lib/mysql
       - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
@@ -32,10 +31,6 @@ services:
       - 3302:3302
     networks:
       - mariadb-network
-
-secrets:
-  db_slave1_paswd:
-    external: true
 
 networks:
   mariadb-network:
