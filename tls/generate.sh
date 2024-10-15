@@ -7,7 +7,7 @@ BASE_DIR="/var/lib/mariadb"
 CA_CN="mariadb_ca"
 CLIENT_CN="mariadb_client"
 MAXSCALE_CN="mariadb_maxscale"
-SERVER_CN="db.domain.com" # Change with your domain
+SERVER_CN="mariadb_server" # Change with your domain
 
 # Generate the CA certificate (used to sign both client and server certificates)
 openssl genrsa -out ca-key.pem 2048

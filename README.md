@@ -15,15 +15,10 @@
 
 ## Steps
 
-- Create dir
-  
+- Create, cd dir and clone
+
 ```shell
 mkdir -p /var/lib/mariadb
-```
-
-- goto dir and clone
-
-```shell
 cd /var/lib/mariadb
 git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```

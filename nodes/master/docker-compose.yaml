@@ -20,7 +20,7 @@ services:
       #     memory: "512M"
     environment:
       TZ: Asia/Jakarta
-      MYSQL_ROOT_PASSWORD_FILE: MASTER_ROOT_PASSWORD_SET
+      MYSQL_ROOT_PASSWORD: MASTER_ROOT_PASSWORD_SET
     volumes:
       - /data/mariadb/master:/var/lib/mysql
       - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro

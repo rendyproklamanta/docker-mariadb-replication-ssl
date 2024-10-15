@@ -39,4 +39,4 @@ require_secure_transport= ON
 ssl
 ssl-ca                  = /etc/my.cnf.d/tls/ca-cert.pem
 ssl-cert                = /etc/my.cnf.d/tls/server-cert.pem
-ssl-key                 =/etc/my.cnf.d/tls/server-key.pem
+ssl-key                 = /etc/my.cnf.d/tls/server-key.pem
