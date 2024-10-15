@@ -43,9 +43,10 @@ CHANGE MASTER TO
     MASTER_LOG_POS=$position,
     MASTER_CONNECT_RETRY=10,
     MASTER_SSL=1,
+    MASTER_SSL_VERIFY_SERVER_CERT=1,
     MASTER_SSL_CA='/etc/my.cnf.d/tls/ca-cert.pem',
-    MASTER_SSL_CERT='/etc/my.cnf.d/tls/client-cert.pem',
-    MASTER_SSL_KEY='/etc/my.cnf.d/tls/client-key.pem';
+    MASTER_SSL_CERT='/etc/my.cnf.d/tls/master-client-cert.pem',
+    MASTER_SSL_KEY='/etc/my.cnf.d/tls/master-client-key.pem';
 
 -- Optionally enable GTID-based replication
 CHANGE MASTER TO MASTER_USE_GTID = slave_pos;
