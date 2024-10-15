@@ -3,9 +3,6 @@
 # Define the absolute path to the script directory
 BASE_DIR="/var/lib/mariadb"
 
-# Set permissions for the TLS directory
-chmod -R 777 $BASE_DIR/tls
-
 # Common Name (CN) for the CA, server, and client
 CA_CN="mariadb_ca"
 CLIENT_CN="mariadb_client"
@@ -47,3 +44,6 @@ openssl x509 -req -in maxscale-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcrea
 
 # Clean up certificate requests
 rm -f *-req.pem
+
+# Set permissions for the TLS directory
+chmod -R 777 $BASE_DIR/tls
