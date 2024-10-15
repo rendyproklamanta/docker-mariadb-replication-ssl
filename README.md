@@ -163,3 +163,10 @@ $db['default'] = array(
    'ssl_set' => $ssl_settings # Add this line
 )
 ```
+
+## SQL Commands
+
+```shell
+SHOW VARIABLES LIKE '%ssl%';
+show status like 'ssl_server_not%';
+```
