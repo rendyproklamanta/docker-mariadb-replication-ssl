@@ -3,7 +3,6 @@ version: "3.9"
 services:
   mariadb-master:
     image: mariadb:lts
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
     deploy:
       replicas: 1
       update_config:
