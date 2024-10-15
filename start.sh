@@ -29,6 +29,11 @@ sudo groupadd mysql
 mkdir -p /data/mariadb
 sudo chown -R root:mysql /data/mariadb
 
+# Generate self-signed SSL
+echo -e "${YELLOW}**** Generate self-signed SSL ****${NC}"
+cd $BASE_DIR/tls
+chmod +x generate.sh && ./generate.sh
+
 # Deploy master
 echo -e "${YELLOW}**** Deploy container master ****${NC}"
 mkdir -p /data/mariadb/master

@@ -11,7 +11,7 @@ CLIENT_CN="mariadb_client"
 MAXSCALE_CN="mariadb_maxscale"
 MASTER_CN="mariadb_mariadb-master"
 SLAVE1_CN="mariadb_mariadb-slave1"
-EXPIRY_DAY="$EXPIRY_DAY"
+EXPIRY_DAY="3650" # 10 years
 
 # Generate the CA certificate
 openssl genrsa -out ca-key.pem 2048
