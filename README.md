@@ -72,7 +72,7 @@ sudo journalctl -u mariadb-repl.service
 - Access database using PMA
 
 ```shell
-Link : http://localhost:8000 or http://[YOUR_IP_ADDRESS]:8000
+Link : http://[YOUR_IP_ADDRESS]:8000 OR https://pma.secure.domain.com (We recomend using SSL)
 user : super_usr
 pass : SUPER_PASSWORD_SET
 ```
@@ -97,70 +97,28 @@ pass : mariadb
 ## Note
 
 - If server down
-
-```shell
-* Execute start.sh again : 
--- linux : ./start.sh
--- windows : ./start.dev.sh
-
-* Check if 1 or more database not sync beetwen servers :
--- Login to mysqlclient : maxscale server
--- Run Query Lock : FLUSH TABLES WITH READ LOCK;
--- Export database {dbname}
--- Import database {dbname} to {dbname_new}
--- Delete old database {dbname}
--- Rename {dbname_new} to {dbname}
--- Run query unlock : UNLOCK TABLES;
--- Check if all tables synced up
-```
-
 - If GTID not sync between servers
+- Execute start.sh again
 
 ```shell
-cd resync
-chmod +x main.sh && ./main.sh
+./start.sh
 ```
 
-## Mount local volume *certs* directory to your container
+## How to connect from application to server using SSL
 
-```yml
-volumes:
-   - /var/lib/mariadb/certs:/usr/share/nginx/html/application/third_party/db_certs/prod
-```
+- Copy all *.pem files to your application
 
-## How to connect from mysql client to server using SSL
-
-- Generate SSL for development only
-
-```shell
-cd /var/lib/mariadb/certs
-chmod +x generate-dev.sh && ./generate-dev.sh
-```
-
-- Then copy all *.pem files to your local development
-
-## Example fo use (CI3 database.php)
+- Example fo use (CI3 database.php)
 
 ```php
-$ssl_settings = array();
-
-if (ENVIRONMENT === 'development') {
-    $ssl_settings = array(
-      'ssl_key' => realpath('./application/third_party/db_certs/dev/client-key.pem'),
-      'ssl_cert' => realpath('./application/third_party/db_certs/dev/client-cert.pem'),
-      'ssl_ca' => realpath('./application/third_party/db_certs/dev/ca-cert.pem'),
-    );
-} else {
-    $ssl_settings = array(
-      'ssl_key' => realpath('./application/third_party/db_certs/prod/client-key.pem'),
-      'ssl_cert' => realpath('./application/third_party/db_certs/prod/client-cert.pem'),
-      'ssl_ca' => realpath('./application/third_party/db_certs/prod/ca-cert.pem'),
-    );
-}
-
 $db['default'] = array(
    ... # Other configs
-   'ssl_set' => $ssl_settings # Add this line
+   'encrypt' = array(
+      'ssl_verify'  => FALSE,
+      'ssl_ca'      => realpath('./application/third_party/db_certs/ca-cert.pem'),
+      'ssl_key'     => realpath('./application/third_party/db_certs/client-key.pem'),
+      'ssl_cert'    => realpath('./application/third_party/db_certs/client-cert.pem'),
+    );
 )
 ```
 

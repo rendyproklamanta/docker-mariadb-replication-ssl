@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  mariadb-master:
+    image: mariadb:11
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        delay: 1s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
+        max_attempts: 2
+      # resources:
+      #   limits:
+      #     cpus: "0.5"
+      #     memory: "512M"
+    environment:
+      TZ: Asia/Jakarta
+      MYSQL_ROOT_PASSWORD: MASTER_ROOT_PASSWORD_SET
+    command:
+      - --port=3301
+      - --server-id=1
+      - --require_secure_transport=ON
+      - --ssl
+      - --ssl-ca=/etc/my.cnf.d/tls/ca-cert.pem
+      - --ssl-cert=/etc/my.cnf.d/tls/master-server-cert.pem
+      - --ssl-key=/etc/my.cnf.d/tls/master-server-key.pem
+    volumes:
+      - /data/mariadb/master:/var/lib/mysql
+      - /var/lib/mariadb/tls:/etc/my.cnf.d/tls
+      - /var/lib/mariadb/mariadb.cnf.d:/etc/mysql/mariadb.cnf.d:ro
+      - /var/lib/mariadb/scripts/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - 3301:3301
+    networks:
+      - mariadb-network
+
+networks:
+  mariadb-network:
+    external: true

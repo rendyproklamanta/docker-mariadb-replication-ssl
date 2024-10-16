@@ -6,8 +6,6 @@ default_authentication_plugin    = mysql_native_password
 log_bin_trust_function_creators  = 1
 sql-mode          = 
 bind-address      = 0.0.0.0
-server-id         = 2
-port              = 3302
 log_bin           = mysql-bin
 binlog_format     = row
 max_binlog_size   = 100M
@@ -33,10 +31,3 @@ thread_handling         = pool-of-threads
 thread_pool_size        = 4
 thread_pool_stall_limit = 60
 slave_parallel_threads  = 4
-
-# Enable SSL
-require_secure_transport= ON
-ssl
-ssl-ca                  = /etc/my.cnf.d/tls/ca-cert.pem
-ssl-cert                = /etc/my.cnf.d/tls/slave1-server-cert.pem
-ssl-key                 = /etc/my.cnf.d/tls/slave1-server-key.pem
