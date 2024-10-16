@@ -37,13 +37,13 @@ cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
 echo -e "${YELLOW}**** Deploy container master ****${NC}"
 mkdir -p $DATA_MASTER_DIR && chown -R root:mysql $DATA_MASTER_DIR  # Create directory data
 docker stack deploy --compose-file $BASE_DIR/nodes/docker-compose.master.yaml --detach=false mariadb
-cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" port="$PORT_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
+cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
 # Deploy slave1
 echo -e "${YELLOW}**** Deploy container slave1 ****${NC}"
 mkdir -p $DATA_SLAVE1_DIR && chown -R root:mysql $DATA_SLAVE1_DIR  # Create directory data
 docker stack deploy --compose-file $BASE_DIR/nodes/docker-compose.slave1.yaml --detach=false mariadb
-cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" port="$PORT_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
+cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
 # Resync replication
 echo -e "${YELLOW}**** Resync replication ****${NC}"

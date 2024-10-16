@@ -34,6 +34,7 @@ services:
       - /var/lib/mariadb/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - /var/lib/mariadb/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf
       - /var/lib/mariadb/scripts/initdb:/docker-entrypoint-initdb.d
+      - /var/lib/mariadb/keyring:/var/lib/mysql-keyring/keyring
     ports:
       - 3301:3301
     networks:

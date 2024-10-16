@@ -2,7 +2,6 @@
 
 # Get from passing arguments
 host=$host
-port=$port
 user=$user
 pass=$pass
 
@@ -12,7 +11,7 @@ container_id=$(docker ps -q -f "name=$host")
 
 # Function to check is running inside the container
 check_mariadb_running() {
-  docker exec $container_id mariadb -u$user --password=$pass --host=$host --port=$port --execute="SELECT 1" > /dev/null 2>&1
+  docker exec $container_id mariadb -u$user --password=$pass --execute="SELECT 1" > /dev/null 2>&1
 }
 
 # Check if the container is running

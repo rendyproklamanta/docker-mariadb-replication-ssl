@@ -1,7 +1,6 @@
 [mysqld]
 
 # -- Below configs are mandatory, 
-# -- Don't change except server-id, bind-address, port
 default_authentication_plugin    = mysql_native_password
 log_bin_trust_function_creators  = 1
 sql-mode          = 
@@ -10,7 +9,6 @@ log_bin           = mysql-bin
 binlog_format     = row
 max_binlog_size   = 100M
 expire_logs_days  = 5
-#tls_version       = TLSv1.2,TLSv1.3
 
 # -- You can add other configs below --
 character-set-server    = utf8mb4
@@ -20,14 +18,27 @@ max_allowed_packet      = 500M
 innodb_buffer_pool_size = 2G
 innodb_flush_neighbors  = 0
 innodb_log_file_size    = 512M
+#tls_version            = TLSv1.2,TLSv1.3
+
 # Timeout
 connect_timeout         = 86400
 wait_timeout            = 86400
 interactive_timeout     = 86400
 net_read_timeout        = 86400
 net_write_timeout       = 86400
+
 # Enable thread pool
 thread_handling         = pool-of-threads
 thread_pool_size        = 4
 thread_pool_stall_limit = 60
 slave_parallel_threads  = 4
+
+# Enable table encryption
+early-plugin-load                = keyring_file.so
+keyring_file_data                = /var/lib/mysql-keyring/keyring
+innodb_encrypt_tables            = ON
+innodb_encrypt_log               = ON
+encrypt_binlog                   = ON
+innodb_encryption_rotate_key_age = 1000
+innodb_encryption_threads        = 4
+innodb_encrypt_temporary_tables  = ON

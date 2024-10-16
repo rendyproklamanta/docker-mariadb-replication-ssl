@@ -142,9 +142,28 @@ $db['default'] = array(
 )
 ```
 
-## SQL Commands
+## SQL Commands to check SSL
 
 ```shell
 SHOW VARIABLES LIKE '%ssl%';
-show status like 'ssl_server_not%';
+SHOW STATUS LIKE 'ssl_server_not%';
+```
+
+## Table encryption
+
+- Test encryption available
+
+```sql
+SHOW VARIABLES LIKE 'keyring%';
+```
+
+```sql
+SELECT 
+    table_name, 
+    create_options 
+FROM 
+    information_schema.tables 
+WHERE 
+    table_schema = 'your_database_name'
+    AND create_options LIKE '%ENCRYPTION%';
 ```

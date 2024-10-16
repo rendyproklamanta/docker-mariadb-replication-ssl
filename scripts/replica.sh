@@ -12,12 +12,12 @@ echo ===[ Starting to resync $host ]===
 echo
 
 # Get the log position and name from master
-result=$(docker exec $(docker ps -q -f "name=$master_host") mariadb -u$user --password=$pass --host="$master_host" --port=$master_port --execute="show master status;")
+result=$(docker exec $(docker ps -q -f "name=$master_host") mariadb -u$user --password=$pass --execute="show master status;")
 log=$(echo $result|awk '{print $6}')
 position=$(echo $result|awk '{print $5}')
 
 docker exec $(docker ps -q -f "name=$host") \
-	mariadb -u$user --password=$pass --host="$host" --port=$port \
+	mariadb -u$user --password=$pass --port=$port \
 	--execute="
 
 	STOP SLAVE;\
