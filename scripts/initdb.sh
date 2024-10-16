@@ -3,7 +3,7 @@
 # Create initdb directory if it doesn't exist
 mkdir -p initdb
 
-# Generate the init.sql file
+# Generate the init.sql file for user replica
 cat <<EOF > initdb/01-init.sql
 -- Set the global time zone
 SET GLOBAL time_zone = '$TIMEZONE';
@@ -40,12 +40,12 @@ GRANT BINLOG ADMIN,
       SHOW DATABASES
    ON *.* TO '$MAXSCALE_USERNAME'@'%';
 
--- Additional user
+-- Create new user
 CREATE USER IF NOT EXISTS '$SUPER_USERNAME'@'%' IDENTIFIED BY '$SUPER_PASSWORD' REQUIRE SSL;
 GRANT ALL PRIVILEGES ON *.* TO '$SUPER_USERNAME'@'%' WITH GRANT OPTION;
 
-CREATE USER IF NOT EXISTS 'other_usr'@'%' IDENTIFIED BY 'other_password' REQUIRE X509;
-GRANT ALL PRIVILEGES ON *.* TO 'other_usr'@'%' WITH GRANT OPTION;
+-- Lock user root for remote access for security
+ALTER USER 'root'@'%' ACCOUNT LOCK;
 
 FLUSH PRIVILEGES;
 EOF

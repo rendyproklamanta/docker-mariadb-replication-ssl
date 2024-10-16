@@ -133,12 +133,12 @@ pass : mariadb
 ```php
 $db['default'] = array(
    ... # Other configs
-   'encrypt' = array(
+   'encrypt' => array(
       'ssl_verify'  => FALSE,
       'ssl_ca'      => realpath('./application/third_party/db_certs/ca-cert.pem'),
       'ssl_key'     => realpath('./application/third_party/db_certs/client-key.pem'),
       'ssl_cert'    => realpath('./application/third_party/db_certs/client-cert.pem'),
-    );
+    ),
 )
 ```
 

@@ -1,9 +1,11 @@
 services:
   phpmyadmin:
     image: phpmyadmin
+    secrets:
+      - db_host
     environment:
       TZ: Asia/Jakarta
-      PMA_HOST: mariadb_maxscale
+      PMA_HOST_FILE: /run/secrets/db_host
       PMA_PORT: 6033
       UPLOAD_LIMIT: 2G
       MEMORY_LIMIT: 500M
@@ -60,6 +62,10 @@ services:
     networks:
       - mariadb-network
       - traefik-network
+
+secrets:
+  db_host:
+    external: true
 
 networks:
   mariadb-network:
