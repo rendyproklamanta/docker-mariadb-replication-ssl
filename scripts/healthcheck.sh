@@ -8,7 +8,7 @@ pass=$pass
 
 WAIT_TIMEOUT=300
 
-container_id=$(docker ps -q -f name=$host)
+container_id=$(docker ps -q -f "name=$host")
 
 # Function to check is running inside the container
 check_mariadb_running() {
