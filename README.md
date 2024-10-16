@@ -2,6 +2,10 @@
 
 ![img](tls-mariadb-maxscale.jpg)
 
+## Prerequisite
+
+- Traefik (optional: for domain pointing to service like PMA, maxscale, traefik dashboard)
+
 ## Stacks
 
 - MariaDB 11.x
@@ -23,10 +27,19 @@ cd /var/lib/mariadb
 git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```
 
-- Change Password by using text replacing tool
+- Default dir is /var/lib/mariadb if you want change to other dir
 
 ```shell
 cd /var/lib/mariadb
+find . -type f -exec sed -i 's|/var/lib/mariadb|/var/lib/mariadb-new|g' {} +
+mv /var/lib/mariadb /var/lib/mariadb-new
+cd /var/lib/mariadb-new # this is your new mariadb directory!
+```
+
+- Change Password by using text replacing tool
+
+```shell
+cd /var/lib/mariadb # change with you mariadb directory
 find -type f -exec sed -i 's/REPL_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/MASTER_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
@@ -46,21 +59,21 @@ ufw allow 8989
 - Change domain PMA
 
 ```shell
-cd /var/lib/mariadb/services/pma
+cd /var/lib/mariadb/services/pma # change with you mariadb directory
 nano docker-compose.yaml
 ```
 
 - Generate ssl
 
 ```shell
-cd /var/lib/mariadb/tls
+cd /var/lib/mariadb/tls # change with you mariadb directory
 chmod +x generate.sh && ./generate.sh
 ```
 
 - Set permission and start!
 
 ```shell
-cd /var/lib/mariadb
+cd /var/lib/mariadb # change with you mariadb directory
 chmod +x start.sh && ./start.sh
 ```
 

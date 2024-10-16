@@ -25,7 +25,7 @@ docker stack rm mariadb
 
 # Create docker secrets
 echo -e "${YELLOW}**** Create docker secrets ****${NC}"
-cd /var/lib/mariadb/env/secrets && chmod +x secrets.sh && ./secrets.sh
+cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
 
 # Create mysql group
 sudo groupadd mysql
