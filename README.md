@@ -43,6 +43,13 @@ ufw allow 3302
 ufw allow 8989
 ```
 
+- Change domain PMA
+
+```shell
+cd /var/lib/mariadb/services/pma
+nano docker-compose.yaml
+```
+
 - Generate ssl
 
 ```shell
