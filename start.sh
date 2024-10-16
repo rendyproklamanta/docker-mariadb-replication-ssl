@@ -30,6 +30,10 @@ cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
 # Create mysql group
 sudo groupadd mysql
 
+# Create keyring directory
+mkdir -p $BASE_DIR/keyring
+chmod -R 755 $BASE_DIR/keyring
+
 # Initdb
 cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
 
