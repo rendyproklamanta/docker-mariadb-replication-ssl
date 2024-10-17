@@ -30,11 +30,11 @@ services:
       - --ssl-key=/etc/my.cnf.d/tls/slave1-server-key.pem
     volumes:
       - /data/mariadb/slave1:/var/lib/mysql
-      - /data/mariadb/encryption:/etc/mysql/encryption
       - /var/lib/mariadb/tls:/etc/my.cnf.d/tls
       - /var/lib/mariadb/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - /var/lib/mariadb/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf
       - /var/lib/mariadb/scripts/initdb:/docker-entrypoint-initdb.d
+      - /var/lib/mariadb/encryption:/etc/mysql/encryption
     # ports:
     #   - 3302:3302
     networks:
