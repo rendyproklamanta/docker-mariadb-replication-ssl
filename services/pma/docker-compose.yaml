@@ -11,8 +11,8 @@ services:
       MEMORY_LIMIT: 500M
       MAX_EXECUTION_TIME: 1000
       PMA_ABSOLUTE_URI: https://pma.secure.domain.com
-    # ports:
-    #   - 8000:80 # Uncomment if you're not using domain and set "traefik.enable=false"
+#    ports:
+#      - 8000:80 # Uncomment if you're not using domain and set "traefik.enable=false"
     volumes:
       - /var/lib/mariadb/tls:/etc/phpmyadmin/tls
       - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php

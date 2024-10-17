@@ -6,8 +6,8 @@ export TIMEZONE="Asia/jakarta"
 export REPL_USERNAME="repl"
 export REPL_PASSWORD="REPL_PASSWORD_SET"
 
-export MAXSCALE_USERNAME="maxuser"
-export MAXSCALE_PASSWORD="maxpwd"
+export MAXSCALE_USERNAME="max_usr"
+export MAXSCALE_PASSWORD="MAXSCALE_PASSWORD_SET"
 
 export SUPER_USERNAME="super_usr"
 export SUPER_PASSWORD="SUPER_PASSWORD_SET"

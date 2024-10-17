@@ -20,7 +20,6 @@ services:
     environment:
       TZ: Asia/Jakarta
       MARIADB_ROOT_PASSWORD: MASTER_ROOT_PASSWORD_SET
-      MARIADB_DATABASE: test 
     command:
       - --port=3301
       - --server-id=1
@@ -36,8 +35,8 @@ services:
       - /var/lib/mariadb/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - /var/lib/mariadb/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf
       - /var/lib/mariadb/scripts/initdb:/docker-entrypoint-initdb.d
-    ports:
-      - 3301:3301
+    # ports:
+    #   - 3301:3301
     networks:
       - mariadb-network
 

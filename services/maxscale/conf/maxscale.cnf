@@ -9,6 +9,7 @@ admin_auth        = 1
 admin_enabled     = 1
 admin_secure_gui  = false
 
+
 ########################
 # Server list
 ########################
@@ -42,6 +43,7 @@ replication_custom_options=MASTER_SSL=1,
                            MASTER_SSL_KEY = '/etc/my.cnf.d/tls/client-key.pem',
                            MASTER_SSL_CA = '/etc/my.cnf.d/tls/ca-cert.pem'
 
+
 #########################
 # Monitor for the servers
 #########################
@@ -49,8 +51,8 @@ replication_custom_options=MASTER_SSL=1,
 type              = monitor
 module            = mariadbmon
 servers           = server1,server2
-user              = maxuser
-password          = maxpwd
+user              = max_usr
+password          = MAXSCALE_PASSWORD_SET
 monitor_interval  = 2000ms
 enforce_read_only_slaves = 1
 auto_failover     = 1
@@ -69,8 +71,9 @@ switchover_timeout      = 2000ms
 type              = service
 router            = readwritesplit
 servers           = server1,server2
-user              = maxuser
-password          = maxpwd
+user              = max_usr
+password          = MAXSCALE_PASSWORD_SET
+
 
 ##########################
 # Listener definitions for the service
@@ -85,3 +88,4 @@ ssl               = true
 ssl_cert          = /etc/maxscale/tls/maxscale-cert.pem
 ssl_key           = /etc/maxscale/tls/maxscale-key.pem
 ssl_ca            = /etc/maxscale/tls/ca-cert.pem
+ssl_verify_peer_certificate = true
