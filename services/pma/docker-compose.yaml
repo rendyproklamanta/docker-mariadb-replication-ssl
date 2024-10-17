@@ -10,6 +10,9 @@ services:
       UPLOAD_LIMIT: 2G
       MEMORY_LIMIT: 500M
       MAX_EXECUTION_TIME: 1000
+      PMA_PMADB: phpmyadmin
+      PMA_USER: pma_usr
+      PMA_PASSWORD: pma_passwd
       PMA_ABSOLUTE_URI: https://pma.secure.domain.com
 #    ports:
 #      - 8000:80 # Uncomment if you're not using domain and set "traefik.enable=false"
