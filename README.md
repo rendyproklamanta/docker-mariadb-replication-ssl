@@ -77,16 +77,7 @@ cd /var/lib/mariadb/services/pma # change with you mariadb directory
 nano docker-compose.yaml
 ```
 
-- Create encryption - **FOR FIRST TIME ONLY!**
-
-> keep your keyfile secure, if diffrenet key the mariadb data directory cannot access, sp dont lost them!
-
-```shell
-cd /var/lib/mariadb/encryption && chmod +x generate.sh && ./generate.sh
-chmod -R 755 /var/lib/mariadb/encryption
-```
-
-- Generate ssl
+- Generate SSL
 
 ```shell
 cd /var/lib/mariadb/tls # change with you mariadb directory
