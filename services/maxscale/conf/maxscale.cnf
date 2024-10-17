@@ -22,6 +22,7 @@ ssl_cert          = /etc/maxscale/tls/client-cert.pem
 ssl_key           = /etc/maxscale/tls/client-key.pem
 ssl_ca            = /etc/maxscale/tls/ca-cert.pem
 replication_custom_options=MASTER_SSL=1,
+                           MASTER_SSL_VERIFY_SERVER_CERT=1
                            MASTER_SSL_CERT = '/etc/my.cnf.d/tls/client-cert.pem',
                            MASTER_SSL_KEY = '/etc/my.cnf.d/tls/client-key.pem',
                            MASTER_SSL_CA = '/etc/my.cnf.d/tls/ca-cert.pem'
@@ -36,6 +37,7 @@ ssl_cert          = /etc/maxscale/tls/client-cert.pem
 ssl_key           = /etc/maxscale/tls/client-key.pem
 ssl_ca            = /etc/maxscale/tls/ca-cert.pem
 replication_custom_options=MASTER_SSL=1,
+                           MASTER_SSL_VERIFY_SERVER_CERT=1
                            MASTER_SSL_CERT = '/etc/my.cnf.d/tls/client-cert.pem',
                            MASTER_SSL_KEY = '/etc/my.cnf.d/tls/client-key.pem',
                            MASTER_SSL_CA = '/etc/my.cnf.d/tls/ca-cert.pem'

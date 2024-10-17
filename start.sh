@@ -28,8 +28,8 @@ sudo groupadd mysql
 # Create docker secrets
 cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
 
-# Create encryption
-mkdir -p $DATA_DIR
+# Generate encryption
+mkdir -p $DATA_DIR/encryption
 cd $BASE_DIR/encryption && chmod +x generate.sh && ./generate.sh
 cp $BASE_DIR/encryption/keyfile* $DATA_DIR/encryption
 chmod -R 755 $DATA_DIR/encryption
