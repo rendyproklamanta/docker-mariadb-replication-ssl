@@ -27,7 +27,7 @@ cd /var/lib/mariadb
 git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```
 
-- Default BASE_DIR is /var/lib/mariadb | if you want change to other dir
+- Default **BASE_DIR** is /var/lib/mariadb | if you want change to other dir
 
 ```shell
 cd /var/lib/mariadb
@@ -36,14 +36,14 @@ mv /var/lib/mariadb /var/lib/mariadb-new
 cd /var/lib/mariadb-new # this is your new mariadb directory!
 ```
 
-- Default DATA_DIR is /data/mariadb | if you want change to other dir
+- Default **DATA_DIR** is /data/mariadb | if you want change to other dir
 
 ```shell
 cd /var/lib/mariadb # change with you mariadb directory
 find . -type f -exec sed -i 's|/data/mariadb|/data/mariadb-new|g' {} +
 ```
 
-- Default BACKUP_DIR is /backup/mariadb | if you want change to other dir
+- Default **BACKUP_DIR** is /backup/mariadb | if you want change to other dir
 
 ```shell
 cd /var/lib/mariadb # change with you mariadb directory
@@ -77,7 +77,7 @@ cd /var/lib/mariadb/services/pma # change with you mariadb directory
 nano docker-compose.yaml
 ```
 
-- Create encryption - FOR FIRST TIME ONLY!
+- Create encryption - **FOR FIRST TIME ONLY!**
 
 > keep your keyfile secure, if diffrenet key the mariadb data directory cannot access, sp dont lost them!
 
@@ -178,7 +178,7 @@ SHOW STATUS LIKE 'ssl_server_not%';
 
 ```sql
 ALTER TABLE table_name
-ENCRYPTED=YES ENCRYPTION_KEY_ID=1;
+ENCRYPTED=YES;
 ```
 
 - Test encryption is ON
