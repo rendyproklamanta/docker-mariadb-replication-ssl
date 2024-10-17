@@ -7,8 +7,7 @@ NC='\033[0m' # No Color (reset to default)
 # Define the absolute path to the data directory
 BASE_DIR="/var/lib/mariadb"
 BACKUP_DIR="/backup/mariadb"
-DATA_MASTER_DIR="/data/mariadb/master"
-DATA_SLAVE1_DIR="/data/mariadb/slave1"
+DATA_DIR="/data/mariadb"
 
 # load env file into the script's environment.
 source $BASE_DIR/env/global.sh
@@ -23,30 +22,31 @@ docker stack rm mariadb
 
 # ---------------------------
 
-# Create docker secrets
-echo -e "${YELLOW}**** Create docker secrets ****${NC}"
-cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
-
 # Create mysql group
 sudo groupadd mysql
 
-# Create keyring directory
-mkdir -p $BASE_DIR/keyring
-chmod -R 755 $BASE_DIR/keyring
+# Create docker secrets
+cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
+
+# Create encryption
+mkdir -p $DATA_DIR
+cd $BASE_DIR/encryption && chmod +x generate.sh && ./generate.sh
+cp $BASE_DIR/encryption/keyfile* $DATA_DIR/encryption
+chmod -R 755 $DATA_DIR/encryption
 
 # Initdb
 cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
 
 # Deploy master
 echo -e "${YELLOW}**** Deploy container master ****${NC}"
-mkdir -p $DATA_MASTER_DIR && chown -R root:mysql $DATA_MASTER_DIR  # Create directory data
-docker stack deploy --compose-file $BASE_DIR/nodes/docker-compose.master.yaml --detach=false mariadb
+mkdir -p $DATA_DIR/master && chown -R root:mysql $DATA_DIR/master  # Create directory data
+docker stack deploy --compose-file $BASE_DIR/nodes/master/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
 # Deploy slave1
 echo -e "${YELLOW}**** Deploy container slave1 ****${NC}"
-mkdir -p $DATA_SLAVE1_DIR && chown -R root:mysql $DATA_SLAVE1_DIR  # Create directory data
-docker stack deploy --compose-file $BASE_DIR/nodes/docker-compose.slave1.yaml --detach=false mariadb
+mkdir -p $DATA_DIR/slave1 && chown -R root:mysql $DATA_DIR/slave1  # Create directory data
+docker stack deploy --compose-file $BASE_DIR/nodes/slave1/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
 # Resync replication

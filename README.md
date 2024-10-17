@@ -4,7 +4,7 @@
 
 ## Prerequisite
 
-- Traefik (optional: for domain pointing to service like PMA, maxscale, traefik dashboard)
+- [Traefik v3](https://github.com/rendyproklamanta/docker-swarm-traefik) (optional: for domain pointing to service like PMA, maxscale, traefik dashboard)
 
 ## Stacks
 
@@ -27,13 +27,27 @@ cd /var/lib/mariadb
 git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```
 
-- Default dir is /var/lib/mariadb if you want change to other dir
+- Default BASE_DIR is /var/lib/mariadb | if you want change to other dir
 
 ```shell
 cd /var/lib/mariadb
 find . -type f -exec sed -i 's|/var/lib/mariadb|/var/lib/mariadb-new|g' {} +
 mv /var/lib/mariadb /var/lib/mariadb-new
 cd /var/lib/mariadb-new # this is your new mariadb directory!
+```
+
+- Default DATA_DIR is /data/mariadb | if you want change to other dir
+
+```shell
+cd /var/lib/mariadb # change with you mariadb directory
+find . -type f -exec sed -i 's|/data/mariadb|/data/mariadb-new|g' {} +
+```
+
+- Default BACKUP_DIR is /backup/mariadb | if you want change to other dir
+
+```shell
+cd /var/lib/mariadb # change with you mariadb directory
+find . -type f -exec sed -i 's|/backup/mariadb|/backup/mariadb-new|g' {} +
 ```
 
 - Change Password by using text replacing tool
@@ -61,6 +75,15 @@ ufw allow 8989
 ```shell
 cd /var/lib/mariadb/services/pma # change with you mariadb directory
 nano docker-compose.yaml
+```
+
+- Create encryption - FOR FIRST TIME ONLY!
+
+> keep your keyfile secure, if diffrenet key the mariadb data directory cannot access, sp dont lost them!
+
+```shell
+cd /var/lib/mariadb/encryption && chmod +x generate.sh && ./generate.sh
+chmod -R 755 /var/lib/mariadb/encryption
 ```
 
 - Generate ssl
@@ -151,19 +174,16 @@ SHOW STATUS LIKE 'ssl_server_not%';
 
 ## Table encryption
 
-- Test encryption available
+- Encrypt table
 
 ```sql
-SHOW VARIABLES LIKE 'keyring%';
+ALTER TABLE table_name
+ENCRYPTED=YES ENCRYPTION_KEY_ID=1;
 ```
 
+- Test encryption is ON
+
 ```sql
-SELECT 
-    table_name, 
-    create_options 
-FROM 
-    information_schema.tables 
-WHERE 
-    table_schema = 'your_database_name'
-    AND create_options LIKE '%ENCRYPTION%';
+SELECT A.NAME, B.ENCRYPTION_SCHEME FROM information_schema.INNODB_TABLESPACES_ENCRYPTION B 
+JOIN information_schema.INNODB_SYS_TABLES A ON A.SPACE = B.SPACE;
 ```
