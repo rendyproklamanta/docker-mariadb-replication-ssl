@@ -34,7 +34,7 @@ services:
       - /var/lib/mariadb/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - /var/lib/mariadb/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf
       - /var/lib/mariadb/scripts/initdb:/docker-entrypoint-initdb.d
-      - /var/lib/mariadb/encryption:/etc/mysql/encryption
+      - /data/mariadb/encryption:/etc/mysql/encryption
     # ports:
     #   - 3302:3302
     networks:

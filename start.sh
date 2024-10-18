@@ -29,8 +29,10 @@ sudo groupadd mysql
 cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
 
 # Generate encryption
+mkdir -p $DATA_DIR/encryption
 cd $BASE_DIR/encryption && chmod +x generate.sh && ./generate.sh
-chmod -R 755 $BASE_DIR/encryption
+cp $BASE_DIR/encryption/keyfile* $DATA_DIR/encryption
+chmod -R 755 $DATA_DIR/encryption
 
 # Initdb
 cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
