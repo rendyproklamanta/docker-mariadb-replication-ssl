@@ -4,7 +4,7 @@
 
 ## Prerequisite
 
-- [Traefik v3](https://github.com/rendyproklamanta/docker-swarm-traefik) (optional: for domain pointing to service like PMA, maxscale, traefik dashboard)
+- [Traefik](https://github.com/rendyproklamanta/docker-swarm-traefik) (optional: for domain pointing to service like PMA, maxscale)
 
 ## Stacks
 
@@ -19,7 +19,7 @@
 
 ## Steps
 
-- Create, cd dir and clone
+1. Create, cd dir and clone
 
 ```shell
 mkdir -p /var/lib/mariadb
@@ -50,7 +50,7 @@ cd /var/lib/mariadb # change with you mariadb directory
 find . -type f -exec sed -i 's|/backup/mariadb|/backup/mariadb-new|g' {} +
 ```
 
-- Change Password by using text replacing tool
+2. Change Password by using text replacing tool
 
 ```shell
 cd /var/lib/mariadb # change with you mariadb directory
@@ -61,7 +61,7 @@ find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/SUPER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 ```
 
-- Adding port to firewall
+3. Adding port to firewall
 
 ```shell
 ufw allow 3306
@@ -71,24 +71,24 @@ ufw allow 3302
 ufw allow 8989
 ```
 
-- Change domain PMA
+4. Change domain PMA
 
 ```shell
 cd /var/lib/mariadb/services/pma # change with you mariadb directory
 nano docker-compose.yaml
 ```
 
-- Generate SSL
-
-```shell
-cd /var/lib/mariadb/tls # change with you mariadb directory
-chmod +x generate.sh && ./generate.sh
-```
-
-- Set permission and start!
+5. Move start.sh to safety place
 
 ```shell
 cd /var/lib/mariadb # change with you mariadb directory
+mv start.sh /etc/init.d/start.sh
+```
+
+6. Set permission and start!
+
+```shell
+cd /etc/init.d
 chmod +x start.sh && ./start.sh
 ```
 

@@ -10,20 +10,14 @@ SET GLOBAL time_zone = '$TIMEZONE';
 
 -- Create replication user if it doesn't exist
 CREATE USER IF NOT EXISTS '$REPL_USERNAME'@'%' IDENTIFIED BY '$REPL_PASSWORD' REQUIRE SSL;
+ALTER USER '$REPL_USERNAME'@'%' IDENTIFIED BY '$REPL_PASSWORD';
 
 -- Grant replication slave privileges to the user
 GRANT REPLICATION SLAVE ON *.* TO '$REPL_USERNAME'@'%';
 
--- Apply the privilege changes
-FLUSH PRIVILEGES;
-EOF
-
-echo "01-init.sql file generated successfully."
-
-# Generate the init.sql file
-cat <<EOF > initdb/02-init.sql
 -- Create user for monitor maxscale
 CREATE USER IF NOT EXISTS '$MAXSCALE_USERNAME'@'%' IDENTIFIED BY '$MAXSCALE_PASSWORD' REQUIRE SSL;
+ALTER USER '$MAXSCALE_USERNAME'@'%' IDENTIFIED BY '$MAXSCALE_PASSWORD';
 
 -- Grant specific privileges for MaxScale
 GRANT SELECT ON mysql.* TO '$MAXSCALE_USERNAME'@'%';
@@ -42,12 +36,14 @@ GRANT BINLOG ADMIN,
 
 -- Create new user
 CREATE USER IF NOT EXISTS '$SUPER_USERNAME'@'%' IDENTIFIED BY '$SUPER_PASSWORD' REQUIRE SSL;
+ALTER USER '$SUPER_USERNAME'@'%' IDENTIFIED BY '$SUPER_PASSWORD';
 GRANT ALL PRIVILEGES ON *.* TO '$SUPER_USERNAME'@'%' WITH GRANT OPTION;
 
 -- Lock user root for remote access for security
 ALTER USER 'root'@'%' ACCOUNT LOCK;
 
+-- Apply the privilege changes
 FLUSH PRIVILEGES;
 EOF
 
-echo "02-init.sql file generated successfully."
+echo "init.sql file generated successfully."

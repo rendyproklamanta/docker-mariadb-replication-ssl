@@ -15,7 +15,7 @@ services:
         max_attempts: 2
     volumes:
       - ./conf/maxscale.cnf:/etc/maxscale.cnf
-      - /var/lib/mariadb/tls:/etc/maxscale/tls
+      - /data/mariadb/tls:/etc/maxscale/tls
     ports:
       - 6033:6033
       - 8989:8989

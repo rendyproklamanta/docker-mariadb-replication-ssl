@@ -17,9 +17,11 @@ services:
       #   limits:
       #     cpus: "0.5"
       #     memory: "512M"
+    secrets:
+      - db_master_paswd
     environment:
       TZ: Asia/Jakarta
-      MARIADB_ROOT_PASSWORD: MASTER_ROOT_PASSWORD_SET
+      MARIADB_ROOT_PASSWORD_FILE: "/run/secrets/db_master_paswd"
     command:
       - --port=3301
       - --server-id=1
@@ -30,15 +32,19 @@ services:
       - --ssl-key=/etc/my.cnf.d/tls/master-server-key.pem
     volumes:
       - /data/mariadb/master:/var/lib/mysql
-      - /var/lib/mariadb/tls:/etc/my.cnf.d/tls
+      - /data/mariadb/encryption:/etc/mysql/encryption
+      - /data/mariadb/tls:/etc/my.cnf.d/tls
       - /var/lib/mariadb/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - /var/lib/mariadb/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf
       - /var/lib/mariadb/scripts/initdb:/docker-entrypoint-initdb.d
-      - /data/mariadb/encryption:/etc/mysql/encryption
     # ports:
     #   - 3301:3301
     networks:
       - mariadb-network
+
+secrets:
+  db_master_paswd:
+    external: true
 
 networks:
   mariadb-network:

@@ -11,13 +11,11 @@ services:
       MEMORY_LIMIT: 500M
       MAX_EXECUTION_TIME: 1000
       PMA_PMADB: phpmyadmin
-      PMA_USER: pma_usr
-      PMA_PASSWORD: pma_passwd
-      PMA_ABSOLUTE_URI: https://pma.secure.domain.com
-#    ports:
-#      - 8000:80 # Uncomment if you're not using domain and set "traefik.enable=false"
+#      PMA_ABSOLUTE_URI: https://pma.secure.domain.com # Uncomment if using traefik and domain name
+    ports:
+      - 8000:80 # Commented if using traefik and domain name
     volumes:
-      - /var/lib/mariadb/tls:/etc/phpmyadmin/tls
+      - /data/mariadb/tls:/etc/phpmyadmin/tls
       - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
     deploy:
       replicas: 1
@@ -30,7 +28,7 @@ services:
         window: 120s
         max_attempts: 2
     labels:
-      - "traefik.enable=true" # Set false to disable traefik
+      - "traefik.enable=false" # Set true to enable traefik
       - "traefik.docker.lbswarm=true"
       - "traefik.docker.network=traefik-network"
 

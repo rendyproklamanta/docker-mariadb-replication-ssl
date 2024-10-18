@@ -6,8 +6,8 @@ NC='\033[0m' # No Color (reset to default)
 
 # Define the absolute path to the data directory
 BASE_DIR="/var/lib/mariadb"
-BACKUP_DIR="/backup/mariadb"
 DATA_DIR="/data/mariadb"
+BACKUP_DIR="/backup/mariadb"
 
 # load env file into the script's environment.
 source $BASE_DIR/env/global.sh
@@ -17,8 +17,13 @@ source $BASE_DIR/env/slave1.sh
 # Create network
 docker network create --driver overlay mariadb-network
 
+# Change atrributes
+sudo chattr -R -a $BASE_DIR
+sudo chattr -R -a $DATA_DIR
+
 # Stopping all services
 docker stack rm mariadb
+rm -rf $BASE_DIR/README.md || true
 
 # ---------------------------
 
@@ -29,10 +34,19 @@ sudo groupadd mysql
 cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
 
 # Generate encryption
-mkdir -p $DATA_DIR/encryption
-cd $BASE_DIR/encryption && chmod +x generate.sh && ./generate.sh
-cp $BASE_DIR/encryption/keyfile* $DATA_DIR/encryption
+mv $BASE_DIR/encryption $DATA_DIR/encryption || true
+cd $DATA_DIR/encryption && chmod +x generate.sh && ./generate.sh
 chmod -R 755 $DATA_DIR/encryption
+
+# Generate TLS
+mv $BASE_DIR/tls $DATA_DIR/tls || true
+cd $DATA_DIR/tls && chmod +x generate.sh && ./generate.sh
+chmod -R 755 $DATA_DIR/tls
+
+### !!IF YOUR TLS/SSL EXPIRED!!
+### Generate a new one by uncomment below. and do ./start again
+### After that commented below again to prevent generate new SSL
+#cd $DATA_DIR/encryption && chmod +x generate-rotation.sh && ./generate-rotation.sh
 
 # Initdb
 cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
@@ -77,3 +91,7 @@ docker stack deploy --compose-file $BASE_DIR/services/pma/docker-compose.yaml --
 echo -e "${YELLOW}**** Set auto startup mariadb service ****${NC}"
 cp $BASE_DIR/mariadb-repl.service /etc/systemd/system/mariadb-repl.service
 sudo systemctl enable mariadb-repl.service
+
+# Change atrributes
+sudo chattr -R +a $BASE_DIR
+sudo chattr -R +a $DATA_DIR
