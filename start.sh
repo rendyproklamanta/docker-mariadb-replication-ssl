@@ -10,9 +10,9 @@ DATA_DIR="/data/mariadb"
 BACKUP_DIR="/backup/mariadb"
 
 # load env file into the script's environment.
-source $BASE_DIR/env/global.sh
-source $BASE_DIR/env/master.sh
-source $BASE_DIR/env/slave1.sh
+source $DATA_DIR/env/global.sh
+source $DATA_DIR/env/master.sh
+source $DATA_DIR/env/slave1.sh
 
 # Create network
 docker network create --driver overlay mariadb-network
@@ -23,30 +23,51 @@ sudo chattr -R -a $DATA_DIR
 
 # Stopping all services
 docker stack rm mariadb
-rm -rf $BASE_DIR/README.md || true
 
 # ---------------------------
+
+# Removing unnecessary files
+rm -rf $BASE_DIR/README.md || true
+rm -rf $BASE_DIR/start.sh || true
 
 # Create mysql group
 sudo groupadd mysql
 
+# Create Directory Data
+mkdir -p $DATA_DIR && chmod -R 755 $DATA_DIR
+
 # Create docker secrets
 cd $BASE_DIR/env/secrets && chmod +x secrets.sh && ./secrets.sh
 
-# Generate encryption
-mv $BASE_DIR/encryption $DATA_DIR/encryption || true
-cd $DATA_DIR/encryption && chmod +x generate.sh && ./generate.sh
-chmod -R 755 $DATA_DIR/encryption
+# Check if the destination file/directory exists (encryption)
+if [ -e "$DATA_DIR/encryption" ]; then
+   echo "Error: Destination '$DATA_DIR/encryption' already exists. Move operation aborted."
+else
+   mv "$BASE_DIR/encryption" "$DATA_DIR/encryption"
+   echo "Moved '$BASE_DIR/encryption' to '$DATA_DIR/encryption'."
 
-# Generate TLS
-mv $BASE_DIR/tls $DATA_DIR/tls || true
-cd $DATA_DIR/tls && chmod +x generate.sh && ./generate.sh
-chmod -R 755 $DATA_DIR/tls
+   # Generate encryption
+   cd $DATA_DIR/encryption && chmod +x generate.sh && ./generate.sh
+   chmod -R 755 $DATA_DIR/encryption
+fi
 
-### !!IF YOUR TLS/SSL EXPIRED!!
-### Generate a new one by uncomment below. and do ./start again
-### After that commented below again to prevent generate new SSL
-#cd $DATA_DIR/encryption && chmod +x generate-rotation.sh && ./generate-rotation.sh
+# Check if the destination file/directory exists (TLS)
+if [ -e "$DATA_DIR/tls" ]; then
+   echo "Error: Destination '$DATA_DIR/tls' already exists. Move operation aborted."
+else
+   mv "$BASE_DIR/tls" "$DATA_DIR/tls"
+   echo "Moved '$BASE_DIR/tls' to '$DATA_DIR/tls'."
+
+   # Generate TLS
+   cd $DATA_DIR/tls && chmod +x generate.sh && ./generate.sh
+
+   ### !!IF YOUR TLS/SSL EXPIRED!!
+   ### Generate a new one by uncomment below and do ./start again
+   ### After that commented below again to prevent generate new SSL
+   #cd $DATA_DIR/encryption && chmod +x generate-rotation.sh && ./generate-rotation.sh
+
+   chmod -R 755 $DATA_DIR/tls
+fi
 
 # Initdb
 cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh

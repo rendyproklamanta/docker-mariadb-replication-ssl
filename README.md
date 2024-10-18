@@ -4,6 +4,7 @@
 
 ## Prerequisite
 
+- Ubuntu 22.04
 - [Traefik](https://github.com/rendyproklamanta/docker-swarm-traefik) (optional: for domain pointing to service like PMA, maxscale)
 
 ## Stacks
