@@ -10,9 +10,9 @@ DATA_DIR="/data/mariadb"
 BACKUP_DIR="/backup/mariadb"
 
 # load env file into the script's environment.
-source $DATA_DIR/env/global.sh
-source $DATA_DIR/env/master.sh
-source $DATA_DIR/env/slave1.sh
+source $BASE_DIR/env/global.sh
+source $BASE_DIR/env/master.sh
+source $BASE_DIR/env/slave1.sh
 
 # Create network
 docker network create --driver overlay mariadb-network
