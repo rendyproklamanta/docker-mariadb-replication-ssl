@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   maxscale:
-    image: mariadb/maxscale:latest
+    image: mariadb/maxscale:21.06
     deploy:
       replicas: 1
       update_config:
@@ -15,7 +15,9 @@ services:
         max_attempts: 2
     volumes:
       - ./conf/maxscale.cnf:/etc/maxscale.cnf
+      - ./conf/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt
       - /data/mariadb/tls:/etc/maxscale/tls
+      - /var/log/maxscale:/var/log/maxscale
     ports:
       - 6033:6033
       - 8989:8989

@@ -21,12 +21,7 @@ protocol          = MariaDBBackend
 ssl               = true
 ssl_cert          = /etc/maxscale/tls/client-cert.pem
 ssl_key           = /etc/maxscale/tls/client-key.pem
-ssl_ca            = /etc/maxscale/tls/ca-cert.pem
-replication_custom_options=MASTER_SSL=1,
-                           MASTER_SSL_VERIFY_SERVER_CERT=1
-                           MASTER_SSL_CERT = '/etc/my.cnf.d/tls/client-cert.pem',
-                           MASTER_SSL_KEY = '/etc/my.cnf.d/tls/client-key.pem',
-                           MASTER_SSL_CA = '/etc/my.cnf.d/tls/ca-cert.pem'
+ssl_ca_cert       = /etc/maxscale/tls/ca-cert.pem
 
 [server2]
 type              = server
@@ -36,12 +31,7 @@ protocol          = MariaDBBackend
 ssl               = true
 ssl_cert          = /etc/maxscale/tls/client-cert.pem
 ssl_key           = /etc/maxscale/tls/client-key.pem
-ssl_ca            = /etc/maxscale/tls/ca-cert.pem
-replication_custom_options=MASTER_SSL=1,
-                           MASTER_SSL_VERIFY_SERVER_CERT=1
-                           MASTER_SSL_CERT = '/etc/my.cnf.d/tls/client-cert.pem',
-                           MASTER_SSL_KEY = '/etc/my.cnf.d/tls/client-key.pem',
-                           MASTER_SSL_CA = '/etc/my.cnf.d/tls/ca-cert.pem'
+ssl_ca_cert       = /etc/maxscale/tls/ca-cert.pem
 
 
 #########################
@@ -53,15 +43,23 @@ module            = mariadbmon
 servers           = server1,server2
 user              = max_usr
 password          = MAXSCALE_PASSWORD_SET
-monitor_interval  = 2000ms
-enforce_read_only_slaves = 1
 auto_failover     = 1
-failover_timeout  = 2000ms
 auto_rejoin       = true
 failcount         = 5
-master_failure_timeout  = 2000ms
-verify_master_failure   = true
-switchover_timeout      = 2000ms
+verify_master_failure    = true
+enforce_read_only_slaves = 1
+
+
+#########################
+# Filters
+#########################
+[dbfw-blacklist]
+type              = filter
+module            = dbfwfilter
+action            = block
+rules             = /etc/maxscale/blacklist-rules.txt
+treat_string_arg_as_field  = false
+treat_string_as_field      = false
 
 
 #########################
@@ -73,6 +71,7 @@ router            = readwritesplit
 servers           = server1,server2
 user              = max_usr
 password          = MAXSCALE_PASSWORD_SET
+filters           = dbfw-blacklist
 
 
 ##########################
@@ -87,5 +86,5 @@ port              = 6033
 ssl               = true
 ssl_cert          = /etc/maxscale/tls/maxscale-cert.pem
 ssl_key           = /etc/maxscale/tls/maxscale-key.pem
-ssl_ca            = /etc/maxscale/tls/ca-cert.pem
+ssl_ca_cert       = /etc/maxscale/tls/ca-cert.pem
 ssl_verify_peer_certificate = true
