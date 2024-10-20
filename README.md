@@ -11,12 +11,27 @@
 
 - MariaDB 11.x
 - Docker Swarm
-- Maxscale
+- Maxscale 21.06
+
+## Include
+
+- [x] [Secure server & client: TLS/SSL ](https://mariadb.com/kb/en/securing-connections-for-client-and-server)
+- [x] [Encryption: Data-at-Rest](https://mariadb.com/kb/en/data-at-rest-encryption-overview/)
+- [x] [Maxscale firewall: Query Blacklist Filter](https://mariadb.com/kb/en/mariadb-maxscale-24-database-firewall-filte)
+- [x] PhpMyAdmin
+- [x] Backup schedule by cron
+- [x] Realtime Backup
+
+## Not Include (optional)
+
+- [Backup to S3](https://github.com/rendyproklamanta/docker-mysql-backup-s3)
+- [User password rotation](https://github.com/rendyproklamanta/docker-mysql-credential-rolling)
 
 ## Servers
 
 - Master
 - Slave1
+- Backup
 
 ## Steps
 
@@ -98,10 +113,6 @@ chmod +x start.sh && ./start.sh
 ```shell
 sudo journalctl -u mariadb-repl.service
 ```
-
-## Rolling user password
-
-<https://github.com/rendyproklamanta/docker-mysql-credential-rolling>
 
 ## Access
 
