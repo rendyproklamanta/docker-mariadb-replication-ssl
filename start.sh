@@ -98,7 +98,6 @@ echo '**** Deploy services ****'
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
-#chmod 644 $BASE_DIR/services/maxscale/conf/blacklist-rules.txt
 docker stack deploy --compose-file $BASE_DIR/services/maxscale/docker-compose.yaml --detach=false mariadb
 
 # Deploy backup
