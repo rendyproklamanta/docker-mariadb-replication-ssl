@@ -9,11 +9,6 @@ BASE_DIR="/var/lib/mariadb"
 DATA_DIR="/data/mariadb"
 BACKUP_DIR="/backup/mariadb"
 
-# load env file into the script's environment.
-source $BASE_DIR/env/global/global-env.sh
-source $BASE_DIR/env/master/master-env.sh
-source $BASE_DIR/env/slave1/slave1-env.sh
-
 # Create network
 docker network create --driver overlay mariadb-network
 
@@ -23,8 +18,6 @@ sudo chattr -R -a $DATA_DIR
 
 # Stopping all services
 docker stack rm mariadb
-
-# ---------------------------------------------------------------------
 
 # Create Directory Data
 mkdir -p $DATA_DIR && chmod -R 755 $DATA_DIR
@@ -64,6 +57,11 @@ fi
 ### After that commented again to prevent generate new SSL
 # nano /etc/init.d/start.sh
 ### ------------------------------------------------------
+
+# load env file into the script's environment.
+source $DATA_DIR/env/global/global-env.sh
+source $DATA_DIR/env/master/master-env.sh
+source $DATA_DIR/env/slave1/slave1-env.sh
 
 # Removing unnecessary files
 rm -rf $BASE_DIR/README.md || true
