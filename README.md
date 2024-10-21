@@ -12,15 +12,14 @@
 - MariaDB 11.x
 - Docker Swarm
 - Maxscale 21.06
+- PhpMyAdmin
 
 ## Include
 
-- [x] [Secure server & client: TLS/SSL ](https://mariadb.com/kb/en/securing-connections-for-client-and-server)
+- [x] [Secure server & client: TLS/SSL](https://mariadb.com/kb/en/securing-connections-for-client-and-server)
 - [x] [Encryption: Data-at-Rest](https://mariadb.com/kb/en/data-at-rest-encryption-overview/)
 - [x] [Maxscale firewall: Query Blacklist Filter](https://mariadb.com/kb/en/mariadb-maxscale-24-database-firewall-filte)
-- [x] PhpMyAdmin
 - [x] Backup schedule by cron
-- [x] Realtime Backup
 
 ## Not Include (optional)
 
@@ -31,7 +30,6 @@
 
 - Master
 - Slave1
-- Backup
 
 ## Steps
 
