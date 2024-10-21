@@ -1,5 +1,5 @@
-rule deny_drop match regex '(?i)\bdrop\b.*'
-rule deny_delete match regex '(?i)\bdelete\b.*'
-rule deny_truncate match regex '(?i)\btruncate\b.*'
+rule deny_drop match regex '(?i)^(?!revoke\s).*?\bdrop\b.*'
+rule deny_delete match regex '(?i)^(?!revoke\s).*?\bdelete\b.*'
+rule deny_truncate match regex '(?i)^(?!revoke\s).*?\btruncate\b.*'
 
 users %@% match any rules deny_drop, deny_delete, deny_truncate
