@@ -178,11 +178,11 @@ host : mariadb_maxscale
 port : 6033
 ---------------------------
 Master
-host : mariadb_mariadb-master
+host : mariadb_master
 port : 3301
 ---------------------------
 Slave1
-host : mariadb_mariadb-slave1
+host : mariadb_slave1
 port : 3301
 ```
 

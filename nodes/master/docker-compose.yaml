@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  mariadb-master:
+  master:
     image: mariadb:11
     deploy:
       replicas: 1

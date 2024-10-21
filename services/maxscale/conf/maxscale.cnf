@@ -15,7 +15,7 @@ admin_secure_gui  = false
 ########################
 [server1]
 type              = server
-address           = mariadb_mariadb-master
+address           = mariadb_master
 port              = 3301
 protocol          = MariaDBBackend
 ssl               = true
@@ -25,7 +25,7 @@ ssl_ca_cert       = /etc/maxscale/tls/ca-cert.pem
 
 [server2]
 type              = server
-address           = mariadb_mariadb-slave1
+address           = mariadb_slave1
 port              = 3302
 protocol          = MariaDBBackend
 ssl               = true

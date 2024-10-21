@@ -3,7 +3,7 @@
 sudo update-ca-certificates
 
 # Set variable
-MAXSCALE_CN="mariadb_mariadb-maxscale"
+MAXSCALE_CN="mariadb_maxscale"
 EXPIRY_DAY="3650" # 10 years
 generate_new=${generate_new:-false}
 

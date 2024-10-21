@@ -3,7 +3,7 @@
 sudo update-ca-certificates
 
 # Set variable
-MASTER_CN="mariadb_mariadb-master"
+MASTER_CN="mariadb_master"
 EXPIRY_DAY="3650" # 10 years
 generate_new=${generate_new:-false}
 

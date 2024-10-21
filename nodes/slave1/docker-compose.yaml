@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  mariadb-slave1:
+  slave1:
     image: mariadb:11
     deploy:
       replicas: 1
