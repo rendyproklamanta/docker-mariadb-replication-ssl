@@ -84,15 +84,18 @@ cd $DATA_DIR/encryption && chmod +x generate.sh && ./generate.sh && chmod -R 755
 
 # Generate CA certificate
 cd $DATA_DIR/tls && chmod +x generate-ca.sh && ./generate-ca.sh
+chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 
 # Generate CLIENT certificate
 cd $DATA_DIR/tls && chmod +x generate-client.sh && ./generate-client.sh
+chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 ### END OF GENERATE ----------------------------------------
 
 # Deploy master
 echo -e "${YELLOW}**** Deploy container master ****${NC}"
 cd $DATA_DIR/env/master && chmod +x master-secret.sh && ./master-secret.sh # Create docker secrets
 cd $DATA_DIR/tls && chmod +x generate-master.sh && ./generate-master.sh # Generate certificate
+chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p $DATA_DIR/master && chmod -R 755 $DATA_DIR/master  # Create directory data
 docker stack deploy --compose-file $BASE_DIR/nodes/master/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
@@ -101,12 +104,11 @@ cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh ho
 echo -e "${YELLOW}**** Deploy container slave1 ****${NC}"
 cd $DATA_DIR/env/slave1 && chmod +x slave1-secret.sh && ./slave1-secret.sh # Create docker secrets
 cd $DATA_DIR/tls && chmod +x generate-slave1.sh && ./generate-slave1.sh # Generate certificate
+chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p $DATA_DIR/slave1 && chmod -R 755 $DATA_DIR/slave1  # Create directory data
 docker stack deploy --compose-file $BASE_DIR/nodes/slave1/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
-# Change permission to TLS directory after generated
-chmod -R 755 $DATA_DIR/tls
 
 # Resync replication
 echo -e "${YELLOW}**** Resync replication ****${NC}"
@@ -122,6 +124,7 @@ echo '**** Deploy services ****'
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
 cd $DATA_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh # Generate certificate
+chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
 docker stack deploy --compose-file $BASE_DIR/services/maxscale/docker-compose.yaml --detach=false mariadb
 
