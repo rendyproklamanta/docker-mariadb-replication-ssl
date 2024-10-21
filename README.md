@@ -14,17 +14,17 @@
 - Maxscale 21.06
 - PhpMyAdmin
 
-## Include
+## Included
 
 - [x] [Secure server & client: TLS/SSL](https://mariadb.com/kb/en/securing-connections-for-client-and-server)
 - [x] [Encryption: Data-at-Rest](https://mariadb.com/kb/en/data-at-rest-encryption-overview/)
 - [x] [Maxscale firewall: Query Blacklist Filter](https://mariadb.com/kb/en/mariadb-maxscale-24-database-firewall-filte)
 - [x] Backup schedule by cron
 
-## Not Include (optional)
+## Not Included (optional)
 
 - [Backup to S3](https://github.com/rendyproklamanta/docker-mysql-backup-s3)
-- [User password rotation](https://github.com/rendyproklamanta/docker-mysql-credential-rolling)
+- [User password rotation](https://github.com/rendyproklamanta/docker-mysql-credential-rolling) - to prevent credential leaks
 
 ## Servers
 
@@ -33,7 +33,7 @@
 
 ## Steps
 
-1. Create, cd dir and clone
+**1. Create dir and clone**
 
 ```shell
 mkdir -p /var/lib/mariadb
@@ -41,33 +41,12 @@ cd /var/lib/mariadb
 git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```
 
-- Default **BASE_DIR** is /var/lib/mariadb | if you want change to other dir
+---
+
+**2. Change Password by using text replacing tool**
 
 ```shell
 cd /var/lib/mariadb
-find . -type f -exec sed -i 's|/var/lib/mariadb|/var/lib/mariadb-new|g' {} +
-mv /var/lib/mariadb /var/lib/mariadb-new
-cd /var/lib/mariadb-new # this is your new mariadb directory!
-```
-
-- Default **DATA_DIR** is /data/mariadb | if you want change to other dir
-
-```shell
-cd /var/lib/mariadb # change with you mariadb directory
-find . -type f -exec sed -i 's|/data/mariadb|/data/mariadb-new|g' {} +
-```
-
-- Default **BACKUP_DIR** is /backup/mariadb | if you want change to other dir
-
-```shell
-cd /var/lib/mariadb # change with you mariadb directory
-find . -type f -exec sed -i 's|/backup/mariadb|/backup/mariadb-new|g' {} +
-```
-
-2. Change Password by using text replacing tool
-
-```shell
-cd /var/lib/mariadb # change with you mariadb directory
 find -type f -exec sed -i 's/REPL_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/MAXSCALE_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/MASTER_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
@@ -75,7 +54,56 @@ find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/SUPER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 ```
 
-3. Adding port to firewall
+---
+
+**3. Change domain PMA**
+
+```shell
+nano /var/lib/mariadb/services/pma/docker-compose.yaml 
+```
+
+---
+
+**4. Change directory location (optional)**
+
+- **DATA_DIR** default location is */data/mariadb* | if you want change to other dir
+
+```shell
+cd /var/lib/mariadb
+find . -type f -exec sed -i 's|/data/mariadb|/mnt/blockstorage/mariadb|g' {} +
+```
+
+- **BACKUP_DIR** default location is */backup/mariadb* | if you want change to other dir
+
+```shell
+cd /var/lib/mariadb 
+find . -type f -exec sed -i 's|/backup/mariadb|/mnt/blockstorage/backup/mariadb|g' {} +
+```
+
+- Edit in every docker-compose.yaml - If you using */mnt* as volume only!!
+
+```shell
+If you using block storage, add in the end of mounted volume ":z"
+Because external storage "/mnt" volume is a shared volume
+```
+
+```shell
+example:
+
+- /mnt/blockstorage/mariadb/master:/var/lib/mysql:z
+```
+
+```shell
+nano /var/lib/mariadb/nodes/master/docker-compose.yaml
+nano /var/lib/mariadb/nodes/slave1/docker-compose.yaml
+nano /var/lib/mariadb/nodes/services/backup/docker-compose.yaml
+nano /var/lib/mariadb/nodes/services/maxscale/docker-compose.yaml
+nano /var/lib/mariadb/nodes/services/pma/docker-compose.yaml
+```
+
+---
+
+**5. Adding port to firewall**
 
 ```shell
 ufw allow 3306
@@ -85,25 +113,24 @@ ufw allow 3302
 ufw allow 8989
 ```
 
-4. Change domain PMA
+**6. Move start.sh to safety place**
 
 ```shell
-cd /var/lib/mariadb/services/pma # change with you mariadb directory
-nano docker-compose.yaml
-```
-
-5. Move start.sh to safety place
-
-```shell
-cd /var/lib/mariadb # change with you mariadb directory
+cd /var/lib/mariadb # change with you "new" mariadb directory if changed
 mv start.sh /etc/init.d/start.sh
 ```
 
-6. Set permission and start!
+**7. Set permission and start!**
 
 ```shell
 cd /etc/init.d
 chmod +x start.sh && ./start.sh
+```
+
+- Test reboot :
+
+```shell
+sudo reboot
 ```
 
 - Check service status after reboot :
@@ -112,32 +139,54 @@ chmod +x start.sh && ./start.sh
 sudo journalctl -u mariadb-repl.service
 ```
 
+---
+
 ## Access
 
 - Access database using PMA
 
+> We recomend using domain for PMA to enable SSL with traefik
+
 ```shell
-Link : http://[YOUR_IP_ADDRESS]:8000 OR https://pma.secure.domain.com (We recomend using SSL)
+Link : http://[YOUR_IP_ADDRESS]:8000 OR https://pma.secure.domain.com 
 user : super_usr
 pass : SUPER_PASSWORD_SET
 ```
 
-- Access using MySql client, like navicat, etc..
+- Access using Mysql-client like workbench, navicat, etc..
 
 ```shell
-host : maxscale or [YOUR_IP_ADDRESS]
+host : [YOUR_IP_ADDRESS]
 user : super_usr
 pass : SUPER_PASSWORD_SET
-port : 6033 (proxy) | 3301 (master) | 3302 (slave)
+port : 6033
 ```
 
 - Access MaxScale web UI
 
 ```shell
-Link : http://localhost:8989 or http://[YOUR_IP_ADDRESS]:8989
+Link : http://[YOUR_IP_ADDRESS]:8989
 user : admin
 pass : mariadb
 ```
+
+- Host & Port List
+
+```shell
+Maxscale
+host : mariadb_maxscale
+port : 6033
+---------------------------
+Master
+host : mariadb_mariadb-master
+port : 3301
+---------------------------
+Slave1
+host : mariadb_mariadb-slave1
+port : 3301
+```
+
+---
 
 ## Note
 
@@ -148,6 +197,8 @@ pass : mariadb
 ```shell
 ./start.sh
 ```
+
+---
 
 ## How to connect from application to server using SSL
 

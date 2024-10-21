@@ -63,7 +63,7 @@ treat_string_as_field      = false
 
 
 #########################
-# Service definitions for read/write splitting and read-only services.
+# Service definitions
 #########################
 [Read-Write-Service]
 type              = service
@@ -75,8 +75,7 @@ filters           = dbfw-blacklist
 
 
 ##########################
-# Listener definitions for the service
-# Listeners represent the ports the service will listen on.
+# Listener definitions
 ##########################
 [Read-Write-Listener]
 type              = listener

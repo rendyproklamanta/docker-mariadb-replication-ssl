@@ -14,10 +14,10 @@ services:
         window: 120s
         max_attempts: 2
     volumes:
-      - ./conf/maxscale.cnf:/etc/maxscale.cnf
-      - ./conf/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt
       - /data/mariadb/tls:/etc/maxscale/tls
       - /var/log/maxscale:/var/log/maxscale
+      - ./conf/maxscale.cnf:/etc/maxscale.cnf
+      - ./conf/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt
     ports:
       - 6033:6033
       - 8989:8989
