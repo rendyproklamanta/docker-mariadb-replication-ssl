@@ -25,6 +25,7 @@ services:
       MAX_BACKUPS: "4"
       INIT_BACKUP: "0"
       CRON_TIME: "0 */2 * * *" # Run backup every xxx
+      MYSQLDUMP_OPTS: "--triggers --events --triggers --routines --single-transaction --quick --lock-tables=false"
       MYSQL_SSL_OPTS: "--ssl-ca=/etc/my.cnf.d/tls/ca-cert.pem --ssl-cert=/etc/my.cnf.d/tls/client-cert.pem --ssl-key=/etc/my.cnf.d/tls/client-key.pem"
     volumes:
       - /backup/mariadb:/backup

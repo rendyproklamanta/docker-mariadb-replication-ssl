@@ -71,7 +71,7 @@ router            = readwritesplit
 servers           = server1,server2
 user              = max_usr
 password          = MAXSCALE_PASSWORD_SET
-filters           = dbfw-blacklist
+#filters           = dbfw-blacklist
 
 
 ##########################
