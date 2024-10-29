@@ -24,10 +24,6 @@ else
    git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 fi
 
-# Change atrributes
-sudo chattr -R -a /etc/secure/mariadb
-sudo chattr -R -a $DATA_DIR
-
 # Stopping all services
 docker stack rm mariadb
 
@@ -37,6 +33,10 @@ mkdir -p $BACKUP_DIR && chmod -R 755 $BACKUP_DIR
 mkdir -p $SECURE_DIR && chmod -R 755 $SECURE_DIR
 mkdir -p $SERVICE_DIR && chmod -R 755 $SERVICE_DIR
 mkdir -p $NODES_DIR && chmod -R 755 $NODES_DIR
+
+# Change atrributes
+sudo chattr -R -a $SECURE_DIR
+sudo chattr -R -a $DATA_DIR
 
 # MOVE : Check if the destination file/directory is exists (env)
 if [ -e "$SECURE_DIR/env" ]; then
