@@ -25,7 +25,7 @@ else
 fi
 
 # Change atrributes
-sudo chattr -R -a $SECURE_DIR
+sudo chattr -R -a /etc/secure/mariadb
 sudo chattr -R -a $DATA_DIR
 
 # Stopping all services
