@@ -32,11 +32,11 @@ services:
       - --ssl-key=/etc/my.cnf.d/tls/slave1-server-key.pem ## change me | is unique in every deployment
     volumes:
       - /data/mariadb/slave1:/var/lib/mysql ## change me | is unique in every deployment
-      - /data/mariadb/encryption:/etc/mysql/encryption
       - /data/mariadb/tls:/etc/my.cnf.d/tls
-      - /var/lib/mariadb/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
-      - /var/lib/mariadb/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf
-      - /var/lib/mariadb/scripts/initdb:/docker-entrypoint-initdb.d
+      - /data/mariadb/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+      - /data/mariadb/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf
+      - /data/mariadb/initdb:/docker-entrypoint-initdb.d
+      - /etc/secure/mariadb/encryption:/etc/mysql/encryption
     # ports:
     #   - 3302:3302
     networks:

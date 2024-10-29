@@ -96,9 +96,9 @@ example:
 ```shell
 nano /var/lib/mariadb/nodes/master/docker-compose.yaml
 nano /var/lib/mariadb/nodes/slave1/docker-compose.yaml
-nano /var/lib/mariadb/nodes/services/backup/docker-compose.yaml
-nano /var/lib/mariadb/nodes/services/maxscale/docker-compose.yaml
-nano /var/lib/mariadb/nodes/services/pma/docker-compose.yaml
+nano /var/lib/mariadb/services/backup/docker-compose.yaml
+nano /var/lib/mariadb/services/maxscale/docker-compose.yaml
+nano /var/lib/mariadb/services/pma/docker-compose.yaml
 ```
 
 ---
