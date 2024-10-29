@@ -17,7 +17,7 @@ docker network create --driver overlay mariadb-network
 
 # CLONE : Check if the destination file/directory is exists (mariadb)
 if [ -e "$BASE_DIR" ]; then
-   echo "Error: Destination '$BASE_DIR' already exists. Move operation aborted."
+   echo "Error: Destination '$BASE_DIR' already exists. Move operation aborted. (OK)"
 else
    mkdir -p $BASE_DIR
    cd $BASE_DIR
@@ -25,6 +25,7 @@ else
 fi
 
 # Change atrributes
+sudo chattr -R -a $SECURE_DIR
 sudo chattr -R -a $DATA_DIR
 
 # Stopping all services
@@ -37,14 +38,9 @@ mkdir -p $SECURE_DIR && chmod -R 755 $SECURE_DIR
 mkdir -p $SERVICE_DIR && chmod -R 755 $SERVICE_DIR
 mkdir -p $NODES_DIR && chmod -R 755 $NODES_DIR
 
-# load env file into the script's environment.
-source $SECURE_DIR/env/global/global-env.sh
-source $SECURE_DIR/env/master/master-env.sh
-source $SECURE_DIR/env/slave1/slave1-env.sh
-
 # MOVE : Check if the destination file/directory is exists (env)
 if [ -e "$SECURE_DIR/env" ]; then
-   echo "Error: Destination '$SECURE_DIR/env' already exists. Move operation aborted."
+   echo "Error: Destination '$SECURE_DIR/env' already exists. Move operation aborted. (OK)"
 else
    mv "$BASE_DIR/env" "$SECURE_DIR/env"
    echo "Moved '$BASE_DIR/env' to '$SECURE_DIR/env'."
@@ -52,7 +48,7 @@ fi
 
 # MOVE : Check if the destination file/directory is exists (encryption)
 if [ -e "$SECURE_DIR/encryption" ]; then
-   echo "Error: Destination '$SECURE_DIR/encryption' already exists. Move operation aborted."
+   echo "Error: Destination '$SECURE_DIR/encryption' already exists. Move operation aborted. (OK)"
 else
    mv "$BASE_DIR/encryption" "$SECURE_DIR/encryption"
    echo "Moved '$BASE_DIR/encryption' to '$SECURE_DIR/encryption'."
@@ -60,20 +56,20 @@ fi
 
 # MOVE : Check if the destination file/directory is exists (TLS)
 if [ -e "$DATA_DIR/tls" ]; then
-   echo "Error: Destination '$DATA_DIR/tls' already exists. Move operation aborted."
+   echo "Error: Destination '$DATA_DIR/tls' already exists. Move operation aborted. (OK)"
 else
    mv "$BASE_DIR/tls" "$DATA_DIR/tls"
    echo "Moved '$BASE_DIR/tls' to '$DATA_DIR/tls'."
 fi
 
 # MOVE : Conf
+rm -rf $DATA_DIR/conf
 mv $BASE_DIR/conf $DATA_DIR/conf
 
-# Initdb
-cd $DATA_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
-
-# MOVE : initdb
-mv $BASE_DIR/scripts/initdb $DATA_DIR/initdb
+# load env file into the script's environment.
+source $SECURE_DIR/env/global/global-env.sh
+source $SECURE_DIR/env/master/master-env.sh
+source $SECURE_DIR/env/slave1/slave1-env.sh
 
 ### !!IF YOUR TLS/SSL EXPIRED!!
 ### -----------------------------------------------------
@@ -88,6 +84,13 @@ mv $BASE_DIR/scripts/initdb $DATA_DIR/initdb
 ### ------------------------------------------------------
 
 ### GENERATE ----------------------------------------------
+# Initdb
+cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
+
+# MOVE : initdb
+rm -rf $DATA_DIR/initdb
+mv $BASE_DIR/scripts/initdb $DATA_DIR/initdb
+
 # Create docker global-secret
 cd $SECURE_DIR/env/global && chmod +x global-secret.sh && ./global-secret.sh 
 
@@ -111,7 +114,7 @@ chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p $DATA_DIR/master && chmod -R 755 $DATA_DIR/master  # Create directory data
 # Create directory nodes
 if [ -e "$NODES_DIR/master" ]; then
-   echo "Error: Destination '$NODES_DIR/master' already exists. Move operation aborted."
+   echo "Error: Destination '$NODES_DIR/master' already exists. Move operation aborted. (OK)"
 else
    mv "$BASE_DIR/nodes/master" "$NODES_DIR/master"
    echo "Moved '$BASE_DIR/nodes/master' to '$NODES_DIR/master'."
@@ -127,7 +130,7 @@ chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p $DATA_DIR/slave1 && chmod -R 755 $DATA_DIR/slave1  # Create directory data
 # Create directory nodes
 if [ -e "$NODES_DIR/slave1" ]; then
-   echo "Error: Destination '$NODES_DIR/slave1' already exists. Move operation aborted."
+   echo "Error: Destination '$NODES_DIR/slave1' already exists. Move operation aborted. (OK)"
 else
    mv "$BASE_DIR/nodes/slave1" "$NODES_DIR/slave1"
    echo "Moved '$BASE_DIR/nodes/slave1' to '$NODES_DIR/slave1'."
@@ -149,7 +152,7 @@ echo '**** Deploy services ****'
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
 if [ -e "$SERVICE_DIR/maxscale" ]; then
-   echo "Error: Destination '$SERVICE_DIR/maxscale' already exists. Move operation aborted."
+   echo "Error: Destination '$SERVICE_DIR/maxscale' already exists. Move operation aborted. (OK)"
 else
 mv $BASE_DIR/services/maxscale $SERVICE_DIR/maxscale
    echo "Moved '$BASE_DIR/services/maxscale' to '$SERVICE_DIR/maxscale'."
@@ -162,7 +165,7 @@ docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --d
 # Deploy backup
 echo -e "${YELLOW}**** Deploy backup container ****${NC}"
 if [ -e "$SERVICE_DIR/backup" ]; then
-   echo "Error: Destination '$SERVICE_DIR/backup' already exists. Move operation aborted."
+   echo "Error: Destination '$SERVICE_DIR/backup' already exists. Move operation aborted. (OK)"
 else
    mv $BASE_DIR/services/backup $SERVICE_DIR/backup
    echo "Moved '$BASE_DIR/services/backup' to '$SERVICE_DIR/backup'."
@@ -172,7 +175,7 @@ docker stack deploy --compose-file $SERVICE_DIR/backup/docker-compose.yaml --det
 # Deploy PMA
 echo -e "${YELLOW}**** Deploy PMA container ****${NC}"
 if [ -e "$SERVICE_DIR/pma" ]; then
-   echo "Error: Destination '$SERVICE_DIR/pma' already exists. Move operation aborted."
+   echo "Error: Destination '$SERVICE_DIR/pma' already exists. Move operation aborted. (OK)"
 else
    mv "$BASE_DIR/services/pma" "$SERVICE_DIR/pma"
    echo "Moved '$BASE_DIR/services/pma' to '$SERVICE_DIR/pma'."
