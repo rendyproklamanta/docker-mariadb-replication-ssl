@@ -9,11 +9,13 @@ BASE_DIR="/var/lib/mariadb"
 NODES_DIR="/var/lib/mariadb/nodes"
 SERVICE_DIR="/var/lib/mariadb/services"
 SERVICE_ALT_DIR="/var/lib/mariadb_services"
+
 DATA_DIR="/data/mariadb"
 BACKUP_DIR="/backup/mariadb"
 SECURE_DIR="/etc/secure/mariadb"
 SHARED_VOLUME="" # Add ":z" if you using shared volume like /mnt blockstorage
 
+docker swarm init
 # Create network
 docker network create --driver overlay mariadb-network
 docker network create --driver overlay traefik-network
