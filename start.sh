@@ -147,15 +147,13 @@ echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
 cd $DATA_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh # Generate certificate
 chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
-docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb
-
-# Deploy backup
-echo -e "${YELLOW}**** Deploy backup container ****${NC}"
-docker stack deploy --compose-file $SERVICE_DIR/backup/docker-compose.yaml --detach=false mariadb
-
-# Deploy PMA
-echo -e "${YELLOW}**** Deploy PMA container ****${NC}"
-docker stack deploy --compose-file $SERVICE_DIR/pma/docker-compose.yaml --detach=false mariadb
+if [ -e "$SERVICE_ALT_DIR/maxscale" ]; then
+   echo "Error: Destination '$SERVICE_ALT_DIR/maxscale' already exists. Move operation aborted. (OK)"
+else
+   mv "$BASE_DIR/services/maxscale" "$SERVICE_ALT_DIR/maxscale"
+   echo "Moved '$BASE_DIR/services/maxscale' to '$SERVICE_ALT_DIR/maxscale'."
+fi
+docker stack deploy --compose-file $SERVICE_ALT_DIR/maxscale/docker-compose.yaml --detach=false mariadb
 
 # Deploy PMA
 echo -e "${YELLOW}**** Deploy PMA container ****${NC}"
@@ -166,6 +164,10 @@ else
    echo "Moved '$BASE_DIR/services/pma' to '$SERVICE_ALT_DIR/pma'."
 fi
 docker stack deploy --compose-file $SERVICE_ALT_DIR/pma/docker-compose.yaml --detach=false mariadb
+
+# Deploy backup
+echo -e "${YELLOW}**** Deploy backup container ****${NC}"
+docker stack deploy --compose-file $SERVICE_DIR/backup/docker-compose.yaml --detach=false mariadb
 
 # Enable startup service
 echo -e "${YELLOW}**** Set auto startup mariadb service ****${NC}"
