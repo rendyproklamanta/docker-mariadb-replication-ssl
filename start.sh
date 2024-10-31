@@ -29,11 +29,9 @@ else
    git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 fi
 
-# Set directory
-find $BASE_DIR -type f -exec sed -i "s/DATA_DIR_SET/$DATA_DIR/g" {} +
-find $BASE_DIR -type f -exec sed -i "s/BACKUP_DIR_SET/$BACKUP_DIR/g" {} +
-find $BASE_DIR -type f -exec sed -i "s/SECURE_DIR_SET/$SECURE_DIR/g" {} +
-find $BASE_DIR -type f -exec sed -i "s/ SHARED_VOLUME_SET/$SHARED_VOLUME/g" {} +
+# Change atrributes
+sudo chattr -R -a $SECURE_DIR
+sudo chattr -R -a $DATA_DIR
 
 # Create Directory
 mkdir -p $DATA_DIR && chmod -R 755 $DATA_DIR
@@ -41,9 +39,11 @@ mkdir -p $BACKUP_DIR && chmod -R 755 $BACKUP_DIR
 mkdir -p $SECURE_DIR && chmod -R 755 $SECURE_DIR
 mkdir -p $SERVICE_ALT_DIR && chmod -R 755 $SERVICE_ALT_DIR
 
-# Change atrributes
-sudo chattr -R -a $SECURE_DIR
-sudo chattr -R -a $DATA_DIR
+# Set directory
+find "$BASE_DIR" -type f -exec sed -i "s|DATA_DIR_SET|$DATA_DIR|g" {} +
+find "$BASE_DIR" -type f -exec sed -i "s|BACKUP_DIR_SET|$BACKUP_DIR|g" {} +
+find "$BASE_DIR" -type f -exec sed -i "s|SECURE_DIR_SET|$SECURE_DIR|g" {} +
+find "$BASE_DIR" -type f -exec sed -i "s| SHARED_VOLUME_SET|$SHARED_VOLUME|g" {} +
 
 # MOVE : Check if the destination file/directory is exists (env)
 if [ -e "$SECURE_DIR/env" ]; then
