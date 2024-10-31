@@ -53,13 +53,13 @@ enforce_read_only_slaves = 1
 #########################
 # Filters
 #########################
-[dbfw-blacklist]
-type              = filter
-module            = dbfwfilter
-action            = block
-rules             = /etc/maxscale/blacklist-rules.txt
-treat_string_arg_as_field  = false
-treat_string_as_field      = false
+#[dbfw-blacklist]
+#type              = filter
+#module            = dbfwfilter
+#action            = block
+#rules             = /etc/maxscale/blacklist-rules.txt
+#treat_string_arg_as_field  = false
+#treat_string_as_field      = false
 
 
 #########################
