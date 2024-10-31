@@ -21,7 +21,7 @@ protocol          = MariaDBBackend
 ssl               = true
 ssl_cert          = /etc/maxscale/tls/client-cert.pem
 ssl_key           = /etc/maxscale/tls/client-key.pem
-ssl_ca_cert       = /etc/maxscale/tls/ca-cert.pem
+ssl_ca            = /etc/maxscale/tls/ca-cert.pem
 
 [server2]
 type              = server
@@ -31,7 +31,7 @@ protocol          = MariaDBBackend
 ssl               = true
 ssl_cert          = /etc/maxscale/tls/client-cert.pem
 ssl_key           = /etc/maxscale/tls/client-key.pem
-ssl_ca_cert       = /etc/maxscale/tls/ca-cert.pem
+ssl_ca            = /etc/maxscale/tls/ca-cert.pem
 
 
 #########################
@@ -85,5 +85,5 @@ port              = 6033
 ssl               = true
 ssl_cert          = /etc/maxscale/tls/maxscale-cert.pem
 ssl_key           = /etc/maxscale/tls/maxscale-key.pem
-ssl_ca_cert       = /etc/maxscale/tls/ca-cert.pem
+ssl_ca            = /etc/maxscale/tls/ca-cert.pem
 ssl_verify_peer_certificate = true
