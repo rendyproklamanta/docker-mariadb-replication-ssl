@@ -16,6 +16,7 @@ SHARED_VOLUME="" # Add ":z" if you using shared volume like /mnt blockstorage
 
 # Create network
 docker network create --driver overlay mariadb-network
+docker network create --driver overlay traefik-network
 
 # Stopping all services
 docker stack rm mariadb
