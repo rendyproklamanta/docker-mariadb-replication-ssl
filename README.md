@@ -64,46 +64,7 @@ nano /var/lib/mariadb/services/pma/docker-compose.yaml
 
 ---
 
-**4. Change directory location (optional)**
-
-- **DATA_DIR** default location is */data/mariadb* | if you want change to other dir
-
-```shell
-cd /var/lib/mariadb
-find . -type f -exec sed -i 's|/data/mariadb|/mnt/blockstorage/mariadb|g' {} +
-```
-
-- **BACKUP_DIR** default location is */backup/mariadb* | if you want change to other dir
-
-```shell
-cd /var/lib/mariadb 
-find . -type f -exec sed -i 's|/backup/mariadb|/mnt/blockstorage/backup/mariadb|g' {} +
-```
-
-- Edit in every docker-compose.yaml - If you using */mnt* as volume only!!
-
-```shell
-If you using block storage, add in the end of mounted volume ":z"
-Because external storage "/mnt" volume is a shared volume
-```
-
-```shell
-example:
-
-- /mnt/blockstorage/mariadb/master:/var/lib/mysql:z
-```
-
-```shell
-nano /var/lib/mariadb/nodes/master/docker-compose.yaml
-nano /var/lib/mariadb/nodes/slave1/docker-compose.yaml
-nano /var/lib/mariadb/services/backup/docker-compose.yaml
-nano /var/lib/mariadb/services/maxscale/docker-compose.yaml
-nano /var/lib/mariadb/services/pma/docker-compose.yaml
-```
-
----
-
-**5. Adding port to firewall**
+**4. Adding port to firewall**
 
 ```shell
 ufw allow 3306
@@ -113,14 +74,14 @@ ufw allow 3302
 ufw allow 8989
 ```
 
-**6. Move start.sh to safety place**
+**5. Move start.sh to safety place**
 
 ```shell
 cd /var/lib/mariadb # change with you "new" mariadb directory if changed
 mv start.sh /etc/init.d/start.sh
 ```
 
-**7. Set permission and start!**
+**6. Set permission and start!**
 
 ```shell
 cd /etc/init.d

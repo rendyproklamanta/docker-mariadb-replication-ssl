@@ -14,7 +14,7 @@ services:
         window: 120s
         max_attempts: 2
     volumes:
-      - /data/mariadb/tls:/etc/maxscale/tls
+      - DATA_DIR_SET/tls:/etc/maxscale/tls SHARED_VOLUME_SET
       - /var/log/maxscale:/var/log/maxscale
       - ./conf/maxscale.cnf:/etc/maxscale.cnf
       - ./conf/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt

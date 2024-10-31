@@ -6,14 +6,19 @@ NC='\033[0m' # No Color (reset to default)
 
 # Define the absolute path to the data directory
 BASE_DIR="/var/lib/mariadb"
+NODES_DIR="/var/lib/mariadb/nodes"
+SERVICE_DIR="/var/lib/mariadb/services"
+SERVICE_ALT_DIR="/var/lib/mariadb_services"
 DATA_DIR="/data/mariadb"
 BACKUP_DIR="/backup/mariadb"
 SECURE_DIR="/etc/secure/mariadb"
-SERVICE_DIR="/var/lib/mariadb_services"
-NODES_DIR="/var/lib/mariadb_nodes"
+SHARED_VOLUME="" # Add ":z" if you using shared volume like /mnt blockstorage
 
 # Create network
 docker network create --driver overlay mariadb-network
+
+# Stopping all services
+docker stack rm mariadb
 
 # CLONE : Check if the destination file/directory is exists (mariadb)
 if [ -e "$BASE_DIR" ]; then
@@ -24,15 +29,17 @@ else
    git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 fi
 
-# Stopping all services
-docker stack rm mariadb
+# Set directory
+find $BASE_DIR -type f -exec sed -i "s/DATA_DIR_SET/$DATA_DIR/g" {} +
+find $BASE_DIR -type f -exec sed -i "s/BACKUP_DIR_SET/$BACKUP_DIR/g" {} +
+find $BASE_DIR -type f -exec sed -i "s/SECURE_DIR_SET/$SECURE_DIR/g" {} +
+find $BASE_DIR -type f -exec sed -i "s/ SHARED_VOLUME_SET/$SHARED_VOLUME/g" {} +
 
-# Create Directory ta
+# Create Directory
 mkdir -p $DATA_DIR && chmod -R 755 $DATA_DIR
 mkdir -p $BACKUP_DIR && chmod -R 755 $BACKUP_DIR
 mkdir -p $SECURE_DIR && chmod -R 755 $SECURE_DIR
-mkdir -p $SERVICE_DIR && chmod -R 755 $SERVICE_DIR
-mkdir -p $NODES_DIR && chmod -R 755 $NODES_DIR
+mkdir -p $SERVICE_ALT_DIR && chmod -R 755 $SERVICE_ALT_DIR
 
 # Change atrributes
 sudo chattr -R -a $SECURE_DIR
@@ -112,13 +119,6 @@ cd $SECURE_DIR/env/master && chmod +x master-secret.sh && ./master-secret.sh # C
 cd $DATA_DIR/tls && chmod +x generate-master.sh && ./generate-master.sh # Generate certificate
 chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p $DATA_DIR/master && chmod -R 755 $DATA_DIR/master  # Create directory data
-# Create directory nodes
-if [ -e "$NODES_DIR/master" ]; then
-   echo "Error: Destination '$NODES_DIR/master' already exists. Move operation aborted. (OK)"
-else
-   mv "$BASE_DIR/nodes/master" "$NODES_DIR/master"
-   echo "Moved '$BASE_DIR/nodes/master' to '$NODES_DIR/master'."
-fi
 docker stack deploy --compose-file $NODES_DIR/master/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
@@ -128,13 +128,6 @@ cd $SECURE_DIR/env/slave1 && chmod +x slave1-secret.sh && ./slave1-secret.sh # C
 cd $DATA_DIR/tls && chmod +x generate-slave1.sh && ./generate-slave1.sh # Generate certificate
 chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p $DATA_DIR/slave1 && chmod -R 755 $DATA_DIR/slave1  # Create directory data
-# Create directory nodes
-if [ -e "$NODES_DIR/slave1" ]; then
-   echo "Error: Destination '$NODES_DIR/slave1' already exists. Move operation aborted. (OK)"
-else
-   mv "$BASE_DIR/nodes/slave1" "$NODES_DIR/slave1"
-   echo "Moved '$BASE_DIR/nodes/slave1' to '$NODES_DIR/slave1'."
-fi
 docker stack deploy --compose-file $NODES_DIR/slave1/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
@@ -151,12 +144,6 @@ echo '**** Deploy services ****'
 
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
-if [ -e "$SERVICE_DIR/maxscale" ]; then
-   echo "Error: Destination '$SERVICE_DIR/maxscale' already exists. Move operation aborted. (OK)"
-else
-mv $BASE_DIR/services/maxscale $SERVICE_DIR/maxscale
-   echo "Moved '$BASE_DIR/services/maxscale' to '$SERVICE_DIR/maxscale'."
-fi
 cd $DATA_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh # Generate certificate
 chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
@@ -164,23 +151,21 @@ docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --d
 
 # Deploy backup
 echo -e "${YELLOW}**** Deploy backup container ****${NC}"
-if [ -e "$SERVICE_DIR/backup" ]; then
-   echo "Error: Destination '$SERVICE_DIR/backup' already exists. Move operation aborted. (OK)"
-else
-   mv $BASE_DIR/services/backup $SERVICE_DIR/backup
-   echo "Moved '$BASE_DIR/services/backup' to '$SERVICE_DIR/backup'."
-fi
 docker stack deploy --compose-file $SERVICE_DIR/backup/docker-compose.yaml --detach=false mariadb
 
 # Deploy PMA
 echo -e "${YELLOW}**** Deploy PMA container ****${NC}"
-if [ -e "$SERVICE_DIR/pma" ]; then
-   echo "Error: Destination '$SERVICE_DIR/pma' already exists. Move operation aborted. (OK)"
-else
-   mv "$BASE_DIR/services/pma" "$SERVICE_DIR/pma"
-   echo "Moved '$BASE_DIR/services/pma' to '$SERVICE_DIR/pma'."
-fi
 docker stack deploy --compose-file $SERVICE_DIR/pma/docker-compose.yaml --detach=false mariadb
+
+# Deploy PMA
+echo -e "${YELLOW}**** Deploy PMA container ****${NC}"
+if [ -e "$SERVICE_ALT_DIR/pma" ]; then
+   echo "Error: Destination '$SERVICE_ALT_DIR/pma' already exists. Move operation aborted. (OK)"
+else
+   mv "$BASE_DIR/services/pma" "$SERVICE_ALT_DIR/pma"
+   echo "Moved '$BASE_DIR/services/pma' to '$SERVICE_ALT_DIR/pma'."
+fi
+docker stack deploy --compose-file $SERVICE_ALT_DIR/pma/docker-compose.yaml --detach=false mariadb
 
 # Enable startup service
 echo -e "${YELLOW}**** Set auto startup mariadb service ****${NC}"
