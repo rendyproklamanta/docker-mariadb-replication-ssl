@@ -33,16 +33,19 @@ else
 fi
 
 # Change atrributes
+echo -e "${YELLOW}**** Changing attributes ****${NC}"
 sudo chattr -R -a $SECURE_DIR
 sudo chattr -R -a $DATA_DIR
 
 # Create Directory
+echo -e "${YELLOW}**** Creating directory ****${NC}"
 mkdir -p $DATA_DIR && chmod -R 755 $DATA_DIR
 mkdir -p $BACKUP_DIR && chmod -R 755 $BACKUP_DIR
 mkdir -p $SECURE_DIR && chmod -R 755 $SECURE_DIR
 mkdir -p $SERVICE_ALT_DIR && chmod -R 755 $SERVICE_ALT_DIR
 
 # Set directory
+echo -e "${YELLOW}**** Setting directory ****${NC}"
 find "$BASE_DIR" -type f -exec sed -i "s|DATA_DIR_SET|$DATA_DIR|g" {} +
 find "$BASE_DIR" -type f -exec sed -i "s|BACKUP_DIR_SET|$BACKUP_DIR|g" {} +
 find "$BASE_DIR" -type f -exec sed -i "s|SECURE_DIR_SET|$SECURE_DIR|g" {} +
@@ -73,10 +76,11 @@ else
 fi
 
 # MOVE : Conf
-rm -rf $DATA_DIR/conf
-mv $BASE_DIR/conf $DATA_DIR/conf
+echo -e "${YELLOW}**** Moving conf directory ****${NC}"
+rm -rf $DATA_DIR/conf && mv $BASE_DIR/conf $DATA_DIR/conf
 
 # load env file into the script's environment.
+echo -e "${YELLOW}**** Set Up Environment ****${NC}"
 source $SECURE_DIR/env/global/global-env.sh
 source $SECURE_DIR/env/master/master-env.sh
 source $SECURE_DIR/env/slave1/slave1-env.sh
@@ -95,32 +99,31 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 
 ### GENERATE ----------------------------------------------
 # Initdb
-cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh
-
-# MOVE : initdb
+echo -e "${YELLOW}**** Executing initdb ****${NC}"
 rm -rf $DATA_DIR/initdb
-mv $BASE_DIR/scripts/initdb $DATA_DIR/initdb
+cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && mv $BASE_DIR/scripts/initdb $DATA_DIR/initdb
 
 # Create docker global-secret
+echo -e "${YELLOW}**** Executing global-secret.sh ****${NC}"
 cd $SECURE_DIR/env/global && chmod +x global-secret.sh && ./global-secret.sh 
 
 # Generate encryption
+echo -e "${YELLOW}**** Generating encryption ****${NC}"
 cd $SECURE_DIR/encryption && chmod +x generate.sh && ./generate.sh && chmod -R 755 $SECURE_DIR/encryption
 
 # Generate CA certificate
-cd $DATA_DIR/tls && chmod +x generate-ca.sh && ./generate-ca.sh
-chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
+echo -e "${YELLOW}**** Generating CA cert ****${NC}"
+cd $DATA_DIR/tls && chmod +x generate-ca.sh && ./generate-ca.sh && chmod -R 755 $DATA_DIR/tls
 
 # Generate CLIENT certificate
-cd $DATA_DIR/tls && chmod +x generate-client.sh && ./generate-client.sh
-chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
+echo -e "${YELLOW}**** Generating Client cert ****${NC}"
+cd $DATA_DIR/tls && chmod +x generate-client.sh && ./generate-client.sh && chmod -R 755 $DATA_DIR/tls
 ### END OF GENERATE ----------------------------------------
 
 # Deploy master
 echo -e "${YELLOW}**** Deploy container master ****${NC}"
 cd $SECURE_DIR/env/master && chmod +x master-secret.sh && ./master-secret.sh # Create docker secrets
-cd $DATA_DIR/tls && chmod +x generate-master.sh && ./generate-master.sh # Generate certificate
-chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
+cd $DATA_DIR/tls && chmod +x generate-master.sh && ./generate-master.sh && chmod -R 755 $DATA_DIR/tls # Generate certificate
 mkdir -p $DATA_DIR/master && chmod -R 755 $DATA_DIR/master  # Create directory data
 docker stack deploy --compose-file $NODES_DIR/master/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
@@ -128,8 +131,7 @@ cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh ho
 # Deploy slave1
 echo -e "${YELLOW}**** Deploy container slave1 ****${NC}"
 cd $SECURE_DIR/env/slave1 && chmod +x slave1-secret.sh && ./slave1-secret.sh # Create docker secrets
-cd $DATA_DIR/tls && chmod +x generate-slave1.sh && ./generate-slave1.sh # Generate certificate
-chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
+cd $DATA_DIR/tls && chmod +x generate-slave1.sh && ./generate-slave1.sh && chmod -R 755 $DATA_DIR/tls # Generate certificate
 mkdir -p $DATA_DIR/slave1 && chmod -R 755 $DATA_DIR/slave1  # Create directory data
 docker stack deploy --compose-file $NODES_DIR/slave1/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
@@ -147,8 +149,7 @@ echo '**** Deploy services ****'
 
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
-cd $DATA_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh # Generate certificate
-chmod -R 755 $DATA_DIR/tls # Change permission to TLS directory after generated
+cd $DATA_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh && chmod -R 755 $DATA_DIR/tls # Generate certificate
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
 if [ -e "$SERVICE_ALT_DIR/maxscale" ]; then
    echo "Error: Destination '$SERVICE_ALT_DIR/maxscale' already exists. Move operation aborted. (OK)"
@@ -178,8 +179,10 @@ cp $BASE_DIR/mariadb-repl.service /etc/systemd/system/mariadb-repl.service
 sudo systemctl enable mariadb-repl.service
 
 # Removing unnecessary files
+echo -e "${YELLOW}**** Removing files ****${NC}"
 rm -rf $BASE_DIR
 
 # Change atrributes
+echo -e "${YELLOW}**** Changing attributes ****${NC}"
 sudo chattr -R +a $SECURE_DIR
 sudo chattr -R +a $DATA_DIR
