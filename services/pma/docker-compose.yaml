@@ -11,11 +11,11 @@ services:
       MEMORY_LIMIT: 500M
       MAX_EXECUTION_TIME: 1000
       PMA_PMADB: phpmyadmin
-#      PMA_ABSOLUTE_URI: https://pma.secure.domain.com # Uncomment if using traefik and domain name
+    #      PMA_ABSOLUTE_URI: https://pma.secure.domain.com # Uncomment if using traefik and domain name
     ports:
       - 8000:80 # Commented if using traefik and domain name
     volumes:
-      - DATA_DIR_SET/tls:/etc/phpmyadmin/tls SHARED_VOLUME_SET
+      - SECURE_DIR_SET/tls:/etc/phpmyadmin/tls SHARED_VOLUME_SET
       - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
     deploy:
       replicas: 1
@@ -58,8 +58,8 @@ services:
       - "traefik.http.routers.phpmyadmin.middlewares=headers-default@file"
 
       # Middleware basicauth - Uncomment if you prefer basicath
-#      - "traefik.http.routers.phpmyadmin.middlewares=pma-auth"
-#      - "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password" # docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
+    #      - "traefik.http.routers.phpmyadmin.middlewares=pma-auth"
+    #      - "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password" # docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
     networks:
       - mariadb-network
       - traefik-network
