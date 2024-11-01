@@ -77,7 +77,7 @@ ufw allow 8989
 **5. Move start.sh to safety place**
 
 ```shell
-cd /var/lib/mariadb # change with you "new" mariadb directory if changed
+cd /var/lib/mariadb
 mv start.sh /etc/init.d/start.sh
 ```
 

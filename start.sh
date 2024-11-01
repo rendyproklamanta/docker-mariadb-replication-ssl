@@ -77,7 +77,7 @@ fi
 
 # MOVE : Conf
 echo -e "${YELLOW}**** Moving conf directory ****${NC}"
-rm -rf $DATA_DIR/conf && mv $BASE_DIR/conf $DATA_DIR/conf
+mv -f $BASE_DIR/conf $DATA_DIR/conf
 
 # load env file into the script's environment.
 echo -e "${YELLOW}**** Set Up Environment ****${NC}"
@@ -100,8 +100,7 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 ### GENERATE ----------------------------------------------
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
-rm -rf $DATA_DIR/initdb
-cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && mv $BASE_DIR/scripts/initdb $DATA_DIR/initdb
+cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && mv -f $BASE_DIR/scripts/initdb $DATA_DIR/initdb
 
 # Create docker global-secret
 echo -e "${YELLOW}**** Executing global-secret.sh ****${NC}"
