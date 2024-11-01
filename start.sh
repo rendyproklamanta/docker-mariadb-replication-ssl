@@ -99,7 +99,7 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 ### GENERATE ----------------------------------------------
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
-cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && rsync -a --delete $BASE_DIR/scripts/initdb/ $DATA_DIR/initdb/
+cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
 
 # Create docker global-secret
 echo -e "${YELLOW}**** Executing global-secret.sh ****${NC}"
