@@ -84,19 +84,26 @@ source $SECURE_DIR/env/global/global-env.sh
 source $SECURE_DIR/env/master/master-env.sh
 source $SECURE_DIR/env/slave1/slave1-env.sh
 
+
 ### !!IF YOUR TLS/SSL EXPIRED!!
 ### -----------------------------------------------------
 ### Generate a new one by uncomment below and do ./start again
 
+# ----------
 #cd $SECURE_DIR/tls && chmod +x generate-new.sh && ./generate-new.sh
-#cd /etc/init.d
-#./start.sh
+# ----------
+
+# And execute start.sh
+# cd /etc/init.d
+# ./start.sh
 
 ### After that commented again to prevent generate new SSL
 # nano /etc/init.d/start.sh
+# and execute ./start.sh again
 ### ------------------------------------------------------
 
-### GENERATE ----------------------------------------------
+
+### GENERATE =======================================================================
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
 cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
@@ -116,8 +123,9 @@ cd $SECURE_DIR/tls && chmod +x generate-ca.sh && ./generate-ca.sh
 # Generate CLIENT certificate
 echo -e "${YELLOW}**** Generating Client cert ****${NC}"
 cd $SECURE_DIR/tls && chmod +x generate-client.sh && ./generate-client.sh
-### END OF GENERATE ----------------------------------------
 
+
+### DEPLOY NODES =====================================================================
 # Deploy master
 echo -e "${YELLOW}**** Deploy container master ****${NC}"
 cd $SECURE_DIR/env/master && chmod +x master-secret.sh && ./master-secret.sh # Create docker secrets
@@ -141,8 +149,8 @@ cd $BASE_DIR/scripts && chmod +x replica.sh && set -k && ./replica.sh master_hos
 # Sync master to slave (if master down)
 cd $BASE_DIR/scripts && chmod +x replica.sh && set -k && ./replica.sh master_host="$HOST_SLAVE1" master_port="$PORT_SLAVE1" host="$HOST_MASTER" port="$PORT_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
 
-# -----------------------------------------------------------------------
 
+### DEPLOY SERVICES ===================================================================
 echo '**** Deploy services ****'
 
 # Deploy MaxScale
@@ -166,6 +174,8 @@ docker stack deploy --compose-file $SERVICE_ALT_DIR/pma/docker-compose.yaml --de
 echo -e "${YELLOW}**** Deploy backup container ****${NC}"
 docker stack deploy --compose-file $SERVICE_DIR/backup/docker-compose.yaml --detach=false mariadb
 
+
+### ADDITIONAL COMMANDS ===================================================================
 # Enable startup service
 echo -e "${YELLOW}**** Set auto startup mariadb service ****${NC}"
 cp $BASE_DIR/mariadb-repl.service /etc/systemd/system/mariadb-repl.service
