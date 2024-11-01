@@ -32,9 +32,9 @@ services:
       - --ssl-key=/etc/my.cnf.d/tls/master-server-key.pem
     volumes:
       - DATA_DIR_SET/master:/var/lib/mysql SHARED_VOLUME_SET
-      - DATA_DIR_SET/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf SHARED_VOLUME_SET
-      - DATA_DIR_SET/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf SHARED_VOLUME_SET
       - DATA_DIR_SET/initdb:/docker-entrypoint-initdb.d SHARED_VOLUME_SET
+      - SECURE_DIR_SET/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf SHARED_VOLUME_SET
+      - SECURE_DIR_SET/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf SHARED_VOLUME_SET
       - SECURE_DIR_SET/tls:/etc/my.cnf.d/tls SHARED_VOLUME_SET
       - SECURE_DIR_SET/encryption:/etc/mysql/encryption SHARED_VOLUME_SET
     # ports:

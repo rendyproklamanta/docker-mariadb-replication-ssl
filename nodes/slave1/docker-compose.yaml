@@ -32,9 +32,9 @@ services:
       - --ssl-key=/etc/my.cnf.d/tls/slave1-server-key.pem ## change me | is unique in every deployment
     volumes:
       - DATA_DIR_SET/slave1:/var/lib/mysql SHARED_VOLUME_SET ## change me | is unique in every deployment
-      - DATA_DIR_SET/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf SHARED_VOLUME_SET
-      - DATA_DIR_SET/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf SHARED_VOLUME_SET
       - DATA_DIR_SET/initdb:/docker-entrypoint-initdb.d SHARED_VOLUME_SET
+      - SECURE_DIR_SET/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf SHARED_VOLUME_SET
+      - SECURE_DIR_SET/conf/client.cnf:/etc/mysql/mariadb.cnf.d/client.cnf SHARED_VOLUME_SET
       - SECURE_DIR_SET/tls:/etc/my.cnf.d/tls SHARED_VOLUME_SET
       - SECURE_DIR_SET/encryption:/etc/mysql/encryption SHARED_VOLUME_SET
     # ports:

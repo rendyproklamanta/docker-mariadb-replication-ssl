@@ -76,7 +76,7 @@ fi
 
 # MOVE : Conf
 echo -e "${YELLOW}**** Moving conf directory ****${NC}"
-rsync -a --delete $BASE_DIR/conf/ $DATA_DIR/conf/
+rsync -a --delete $BASE_DIR/conf/ $SECURE_DIR/conf/
 
 # load env file into the script's environment.
 echo -e "${YELLOW}**** Set Up Environment ****${NC}"
