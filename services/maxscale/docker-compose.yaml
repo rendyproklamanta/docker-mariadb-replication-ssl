@@ -15,9 +15,9 @@ services:
         max_attempts: 2
     volumes:
       - DATA_DIR_SET/tls:/etc/maxscale/tls SHARED_VOLUME_SET
+      - DATA_DIR_SET/conf/maxscale/maxscale.cnf:/etc/maxscale.cnf SHARED_VOLUME_SET
+      - DATA_DIR_SET/conf/maxscale/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt SHARED_VOLUME_SET
       - /var/log/maxscale:/var/log/maxscale
-      - ./conf/maxscale.cnf:/etc/maxscale.cnf
-      - ./conf/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt
     ports:
       - 6033:6033
       - 8989:8989
