@@ -76,7 +76,7 @@ fi
 
 # MOVE : Conf
 echo -e "${YELLOW}**** Moving conf directory ****${NC}"
-mv -f $BASE_DIR/conf $DATA_DIR/conf
+rsync -a --delete $BASE_DIR/conf/ $DATA_DIR/conf/
 
 # load env file into the script's environment.
 echo -e "${YELLOW}**** Set Up Environment ****${NC}"
@@ -99,7 +99,7 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 ### GENERATE ----------------------------------------------
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
-cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && mv -f $BASE_DIR/scripts/initdb $DATA_DIR/initdb
+cd $BASE_DIR/scripts && chmod +x initdb.sh && ./initdb.sh && rsync -a --delete $BASE_DIR/scripts/initdb/ $DATA_DIR/initdb/
 
 # Create docker global-secret
 echo -e "${YELLOW}**** Executing global-secret.sh ****${NC}"
@@ -146,8 +146,8 @@ cd $BASE_DIR/scripts && chmod +x replica.sh && set -k && ./replica.sh master_hos
 echo '**** Deploy services ****'
 
 # Deploy MaxScale
-echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
 source $SERVICE_DIR/maxscale/init.sh
+echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
 cd $DATA_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh && chmod -R 755 $DATA_DIR/tls # Generate certificate
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
 docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb

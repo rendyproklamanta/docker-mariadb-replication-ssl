@@ -5,4 +5,4 @@ find "$BASE_DIR" -type f -exec sed -i "s|MAXCONF_PASSWORD_SET|$MAXSCALE_PASSWORD
 
 # MOVE : Conf
 echo -e "${YELLOW}**** Moving maxscale conf directory ****${NC}"
-mv -f $SERVICE_DIR/maxscale/conf $DATA_DIR/conf/maxscale
+rsync -a --delete $SERVICE_DIR/maxscale/conf/ $DATA_DIR/conf/maxscale/
