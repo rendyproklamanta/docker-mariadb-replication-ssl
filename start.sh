@@ -35,7 +35,6 @@ fi
 # Change atrributes
 echo -e "${YELLOW}**** Changing attributes ****${NC}"
 sudo chattr -R -a $SECURE_DIR
-sudo chattr -R -a $DATA_DIR
 
 # Create Directory
 echo -e "${YELLOW}**** Creating directory ****${NC}"
@@ -148,15 +147,10 @@ echo '**** Deploy services ****'
 
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
+source $SERVICE_DIR/maxscale/init.sh
 cd $DATA_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh && chmod -R 755 $DATA_DIR/tls # Generate certificate
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
-if [ -e "$SERVICE_ALT_DIR/maxscale" ]; then
-   echo "Error: Destination '$SERVICE_ALT_DIR/maxscale' already exists. Move operation aborted. (OK)"
-else
-   mv "$BASE_DIR/services/maxscale" "$SERVICE_ALT_DIR/maxscale"
-   echo "Moved '$BASE_DIR/services/maxscale' to '$SERVICE_ALT_DIR/maxscale'."
-fi
-docker stack deploy --compose-file $SERVICE_ALT_DIR/maxscale/docker-compose.yaml --detach=false mariadb
+docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb
 
 # Deploy PMA
 echo -e "${YELLOW}**** Deploy PMA container ****${NC}"
@@ -184,4 +178,7 @@ rm -rf $BASE_DIR
 # Change atrributes
 echo -e "${YELLOW}**** Changing attributes ****${NC}"
 sudo chattr -R +a $SECURE_DIR
-sudo chattr -R +a $DATA_DIR
+
+## Show list secrets
+echo -e "${YELLOW}**** Secrets list ****${NC}"
+docker secret ls

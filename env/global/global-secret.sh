@@ -11,6 +11,3 @@ echo "6033" | docker secret create db_port -
 echo "mariadb_maxscale" | docker secret create db_host -
 echo "super_usr" | docker secret create db_super_user -
 echo "SUPER_PASSWORD_SET" | docker secret create db_super_paswd -
-
-## Show list secrets
-docker secret ls
