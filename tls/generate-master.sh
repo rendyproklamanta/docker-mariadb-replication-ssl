@@ -17,3 +17,5 @@ if [ "$generate_new" = true ] || [ ! -f master-server-key.pem ] || [ ! -f master
 else
    echo "Master server certificate already exists, skipping."
 fi
+
+find . -type f -exec chmod 755 {} \;

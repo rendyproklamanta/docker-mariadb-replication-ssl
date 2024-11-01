@@ -17,3 +17,5 @@ if [ "$generate_new" = true ] || [ ! -f slave1-server-key.pem ] || [ ! -f slave1
 else
    echo "Slave1 server certificate already exists, skipping."
 fi
+
+find . -type f -exec chmod 755 {} \;

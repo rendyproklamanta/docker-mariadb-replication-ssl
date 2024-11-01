@@ -111,17 +111,17 @@ cd $SECURE_DIR/encryption && chmod +x generate.sh && ./generate.sh && chmod -R 7
 
 # Generate CA certificate
 echo -e "${YELLOW}**** Generating CA cert ****${NC}"
-cd $SECURE_DIR/tls && chmod +x generate-ca.sh && ./generate-ca.sh && chmod -R 755 $SECURE_DIR/tls
+cd $SECURE_DIR/tls && chmod +x generate-ca.sh && ./generate-ca.sh
 
 # Generate CLIENT certificate
 echo -e "${YELLOW}**** Generating Client cert ****${NC}"
-cd $SECURE_DIR/tls && chmod +x generate-client.sh && ./generate-client.sh && chmod -R 755 $SECURE_DIR/tls
+cd $SECURE_DIR/tls && chmod +x generate-client.sh && ./generate-client.sh
 ### END OF GENERATE ----------------------------------------
 
 # Deploy master
 echo -e "${YELLOW}**** Deploy container master ****${NC}"
 cd $SECURE_DIR/env/master && chmod +x master-secret.sh && ./master-secret.sh # Create docker secrets
-cd $SECURE_DIR/tls && chmod +x generate-master.sh && ./generate-master.sh && chmod -R 755 $SECURE_DIR/tls # Generate certificate
+cd $SECURE_DIR/tls && chmod +x generate-master.sh && ./generate-master.sh # Generate certificate
 mkdir -p $DATA_DIR/master && chmod -R 755 $DATA_DIR/master  # Create directory data
 docker stack deploy --compose-file $NODES_DIR/master/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
@@ -129,7 +129,7 @@ cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh ho
 # Deploy slave1
 echo -e "${YELLOW}**** Deploy container slave1 ****${NC}"
 cd $SECURE_DIR/env/slave1 && chmod +x slave1-secret.sh && ./slave1-secret.sh # Create docker secrets
-cd $SECURE_DIR/tls && chmod +x generate-slave1.sh && ./generate-slave1.sh && chmod -R 755 $SECURE_DIR/tls # Generate certificate
+cd $SECURE_DIR/tls && chmod +x generate-slave1.sh && ./generate-slave1.sh # Generate certificate
 mkdir -p $DATA_DIR/slave1 && chmod -R 755 $DATA_DIR/slave1  # Create directory data
 docker stack deploy --compose-file $NODES_DIR/slave1/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
@@ -148,7 +148,7 @@ echo '**** Deploy services ****'
 # Deploy MaxScale
 source $SERVICE_DIR/maxscale/init.sh
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
-cd $SECURE_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh && chmod -R 755 $SECURE_DIR/tls # Generate certificate
+cd $SECURE_DIR/tls && chmod +x generate-maxscale.sh && ./generate-maxscale.sh # Generate certificate
 mkdir -p /var/log/maxscale && touch /var/log/maxscale/maxscale.log && chmod -R 777 /var/log/maxscale/maxscale.log # Create log
 docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb
 

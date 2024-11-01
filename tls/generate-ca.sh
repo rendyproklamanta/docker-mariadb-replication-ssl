@@ -15,3 +15,5 @@ if [ "$generate_new" = true ] || [ ! -f ca-key.pem ] || [ ! -f ca-cert.pem ]; th
 else
    echo "CA certificate already exists, skipping."
 fi
+
+find . -type f -exec chmod 755 {} \;

@@ -17,3 +17,5 @@ if [ "$generate_new" = true ] || [ ! -f client-key.pem ] || [ ! -f client-cert.p
 else
    echo "Client certificate already exists, skipping."
 fi
+
+find . -type f -exec chmod 755 {} \;

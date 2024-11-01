@@ -17,3 +17,5 @@ if [ "$generate_new" = true ] || [ ! -f maxscale-key.pem ] || [ ! -f maxscale-ce
 else
    echo "MaxScale certificate already exists, skipping."
 fi
+
+find . -type f -exec chmod 755 {} \;
