@@ -15,7 +15,7 @@ services:
     ports:
       - 8000:80 # Commented if using traefik and domain name
     volumes:
-      - SECURE_DIR_SET/tls:/etc/phpmyadmin/tls SHARED_VOLUME_SET
+      - SECURE_DIR_SET/tls:/etc/phpmyadmin/tls
       - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
     deploy:
       replicas: 1

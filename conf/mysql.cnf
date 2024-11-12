@@ -1,39 +1,109 @@
 [mysqld]
 
-# -- Below configs are mandatory, 
-default_authentication_plugin    = mysql_native_password
-log_bin_trust_function_creators  = 1
-sql-mode          = 
-bind-address      = 0.0.0.0
-log_bin           = mysql-bin
-binlog_format     = row
-max_binlog_size   = 100M
-expire_logs_days  = 5
+# Basic settings
+default_authentication_plugin     = mysql_native_password
+sql-mode                          = 
+bind-address                      = 0.0.0.0
+log_bin                           = mysql-bin
+binlog_format                     = row
+max_binlog_size                   = 1G
+expire_logs_days                  = 5
+log_bin_trust_function_creators   = 1
+event_scheduler                   = ON
 
-# -- You can add other configs below --
-character-set-server    = utf8mb4
-collation-server        = utf8mb4_general_ci
-max_connections         = 5000
-max_allowed_packet      = 500M
-innodb_buffer_pool_size = 2G
-innodb_flush_neighbors  = 0
-innodb_log_file_size    = 512M
-#tls_version            = TLSv1.2,TLSv1.3
+# Character Set and Collation
+character-set-server              = utf8mb4
+collation-server                  = utf8mb4_general_ci
+
+# Connection Settings
+max_connections                   = 5000
+max_allowed_packet                = 500M
+
+# InnoDB Configuration
+innodb_buffer_pool_size           = 2G                  # Adjust based on available RAM
+innodb_flush_neighbors            = 0
+innodb_log_file_size              = 1G                  # Increased for better performance
+innodb_log_buffer_size            = 128M                # Increased for better performance
+innodb_flush_log_at_trx_commit    = 2                   # Balance between performance and durability
+innodb_read_io_threads            = 16                  # Increased for better I/O performance
+innodb_write_io_threads           = 16                  # Increased for better I/O performance
+innodb_thread_concurrency         = 0                   # Let InnoDB adjust automatically
+innodb_purge_threads              = 4
+innodb_doublewrite                = 1
+innodb_io_capacity                = 2000                # Adjust based on your storage capabilities
+innodb_io_capacity_max            = 4000                # Adjust based on your storage capabilities
+
+# Query Cache
+query_cache_type                  = 0                   # Disabled in MariaDB 11
+query_cache_size                  = 0                   # Disabled in MariaDB 11
+
+# Caching
+table_open_cache                  = 16384               # Increased for better performance
+table_definition_cache            = 8192                # Increased for better performance
+table_open_cache_instances        = 16
+
+# Thread Pool
+thread_handling                   = pool-of-threads
+thread_pool_size                  = 4                   # Adjust based on CPU cores
+thread_pool_max_threads           = 1000                # New in MariaDB 11
+thread_pool_stall_limit           = 100ms               # Adjusted to milliseconds in MariaDB 11
+slave_parallel_threads            = 8                   # Increased for better replication performance
+
+# Logging
+general_log                       = 0                   # Disabled for performance, enable only when needed
+general_log_file                  = /var/log/mariadb/general.log
+slow_query_log                    = 1                   # Slow query Log
+slow_query_log_file               = /var/log/mariadb/slow.log
+long_query_time                   = 30                  # Time in second to catch slow queries
+log_slow_admin_statements         = 1
+log_slow_slave_statements         = 1
 
 # Timeout
-connect_timeout         = 86400
-wait_timeout            = 86400
-interactive_timeout     = 86400
-net_read_timeout        = 86400
-net_write_timeout       = 86400
+connect_timeout                   = 600                 # Reduced to prevent hanging connections
+wait_timeout                      = 600                 # Reduced to free up resources faster
+interactive_timeout               = 600                 # Reduced to free up resources faster
+net_read_timeout                  = 600                 # Reduced for better responsiveness
+net_write_timeout                 = 600                 # Reduced for better responsiveness
 
-# Enable thread pool
-thread_handling         = pool-of-threads
-thread_pool_size        = 4
-thread_pool_stall_limit = 60
-slave_parallel_threads  = 4
+# Buffer Settings
+tmp_table_size                    = 512M                # Increased for better performance
+max_heap_table_size               = 512M                # Increased to match tmp_table_size
+sort_buffer_size                  = 8M                  # Increased for better sorting performance
+join_buffer_size                  = 8M                  # Increased for better join performance
 
-# Enable table encryption
+# Replication
+sync_binlog                       = 1
+binlog_cache_size                 = 4M                  # Increased for better performance
+binlog_stmt_cache_size            = 4M                  # Increased for better performance
+binlog_row_image                  = minimal
+
+# Performance Schema
+performance_schema                                         = ON
+performance_schema_consumer_events_statements_history_long = ON
+
+# Improved Memory Allocation
+innodb_page_cleaners              = 8                   # Increased for better cleaning performance
+innodb_sort_buffer_size           = 8M                  # Increased for better sorting performance
+
+# Optimize Background Processes
+innodb_background_scrub_data_check_interval  = 3600     # Increased to reduce overhead
+innodb_background_scrub_data_interval        = 7200     # Increased to reduce overhead
+
+# Additional Optimization
+optimizer_switch                  = 'index_merge_intersection=off,mrr=on,mrr_cost_based=off'
+query_prealloc_size               = 524288              # Increased for better memory management
+innodb_adaptive_hash_index        = ON                  # Enable adaptive hash index for better performance
+innodb_change_buffering           = all                 # Enable change buffering for all operations
+innodb_lru_scan_depth             = 1024                # Adjust based on your workload
+innodb_max_dirty_pages_pct        = 90                  # Allow more dirty pages for better write performance
+innodb_max_dirty_pages_pct_lwm    = 10                  # Low water mark for dirty pages flushing
+
+# New MariaDB 11 Features
+use_stat_tables                   = PREFERABLY          # Use statistic tables for better query optimization
+histogram_size                    = 100                 # Enable histograms for better query planning
+histogram_type                    = DOUBLE_PREC_HB      # Use double precision for histograms
+
+# Encryption and Security
 plugin_load_add                           = file_key_management
 file_key_management_filename              = /etc/mysql/encryption/keyfile.enc
 file_key_management_filekey               = FILE:/etc/mysql/encryption/keyfile.key

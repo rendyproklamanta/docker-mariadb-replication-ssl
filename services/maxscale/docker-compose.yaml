@@ -14,10 +14,10 @@ services:
         window: 120s
         max_attempts: 2
     volumes:
-      - SECURE_DIR_SET/conf/maxscale/maxscale.cnf:/etc/maxscale.cnf SHARED_VOLUME_SET
-      - SECURE_DIR_SET/conf/maxscale/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt SHARED_VOLUME_SET
-      - SECURE_DIR_SET/tls:/etc/maxscale/tls SHARED_VOLUME_SET
-      - /var/log/maxscale:/var/log/maxscale SHARED_VOLUME_SET
+      - SECURE_DIR_SET/conf/maxscale/maxscale.cnf:/etc/maxscale.cnf
+      - SECURE_DIR_SET/conf/maxscale/blacklist-rules.txt:/etc/maxscale/blacklist-rules.txt
+      - SECURE_DIR_SET/tls:/etc/maxscale/tls
+      - /var/log/maxscale:/var/log/maxscale
     ports:
       - 6033:6033
       - 8989:8989
