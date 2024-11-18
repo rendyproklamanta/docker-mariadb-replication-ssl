@@ -34,9 +34,14 @@ GRANT BINLOG ADMIN,
       SHOW DATABASES
    ON *.* TO '$MAXSCALE_USERNAME'@'%';
 
--- Create new user
-CREATE USER IF NOT EXISTS '$SUPER_USERNAME'@'%' IDENTIFIED BY '$SUPER_PASSWORD' REQUIRE SSL;
-GRANT ALL PRIVILEGES ON *.* TO '$SUPER_USERNAME'@'%' WITH GRANT OPTION;
+-- Create new user for super admin
+CREATE USER IF NOT EXISTS '$SUPERADMIN_USERNAME'@'%' IDENTIFIED BY '$SUPERADMIN_PASSWORD' REQUIRE SSL;
+GRANT ALL PRIVILEGES ON *.* TO '$SUPERADMIN_USERNAME'@'%' WITH GRANT OPTION;
+
+-- Create new user for app and limit privilege
+CREATE USER IF NOT EXISTS '$SUPERUSER_USERNAME'@'%' IDENTIFIED BY '$SUPERUSER_PASSWORD' REQUIRE SSL;
+GRANT ALL PRIVILEGES ON *.* TO '$SUPERUSER_USERNAME'@'%' WITH GRANT OPTION;
+REVOKE DELETE, DROP, TRUNCATE ON *.* FROM '$SUPERUSER_USERNAME'@'%';
 
 -- Lock user root for remote access for security
 ALTER USER 'root'@'%' ACCOUNT LOCK;
@@ -53,51 +58,51 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS optimize_all_tables;
 CREATE PROCEDURE optimize_all_tables()
 BEGIN
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE db_name VARCHAR(64);
-    DECLARE tbl_name VARCHAR(64);
-    DECLARE engine VARCHAR(64);
-    DECLARE cur CURSOR FOR 
-        SELECT table_schema, table_name 
-        FROM information_schema.tables 
-        WHERE table_type = 'BASE TABLE' 
-          AND table_schema NOT IN ('mysql', 'information_schema', 'performance_schema', 'sys'); 
+   DECLARE done INT DEFAULT FALSE;
+   DECLARE db_name VARCHAR(64);
+   DECLARE tbl_name VARCHAR(64);
+   DECLARE engine VARCHAR(64);
+   DECLARE cur CURSOR FOR 
+      SELECT table_schema, table_name 
+      FROM information_schema.tables 
+      WHERE table_type = 'BASE TABLE' 
+         AND table_schema NOT IN ('mysql', 'information_schema', 'performance_schema', 'sys'); 
 
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-    OPEN cur;
-    read_loop: LOOP
-        FETCH cur INTO db_name, tbl_name;
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
+   OPEN cur;
+   read_loop: LOOP
+      FETCH cur INTO db_name, tbl_name;
+      IF done THEN
+         LEAVE read_loop;
+      END IF;
 
-        -- Get the engine for the table
-        SELECT ENGINE INTO engine 
-        FROM information_schema.tables 
-        WHERE table_schema = db_name AND table_name = tbl_name;
+      -- Get the engine for the table
+      SELECT ENGINE INTO engine 
+      FROM information_schema.tables 
+      WHERE table_schema = db_name AND table_name = tbl_name;
 
-        IF engine = 'InnoDB' THEN
-            -- InnoDB uses rebuild by ALTER TABLE
-            SET @opt_stmt = CONCAT('ALTER TABLE ', db_name, '.', tbl_name, ' ENGINE = InnoDB');
-            PREPARE stmt FROM @opt_stmt;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-        ELSEIF engine = 'MyISAM' THEN
-            -- Repair MyISAM tables
-            SET @repair_stmt = CONCAT('REPAIR TABLE ', db_name, '.', tbl_name);
-            PREPARE stmt FROM @repair_stmt;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-        ELSE
-            -- For other engines, use OPTIMIZE
-            SET @opt_stmt = CONCAT('OPTIMIZE TABLE ', db_name, '.', tbl_name);
-            PREPARE stmt FROM @opt_stmt;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-        END IF;
-    END LOOP;
-    CLOSE cur;
+      IF engine = 'InnoDB' THEN
+         -- InnoDB uses rebuild by ALTER TABLE
+         SET @opt_stmt = CONCAT('ALTER TABLE ', db_name, '.', tbl_name, ' ENGINE = InnoDB');
+         PREPARE stmt FROM @opt_stmt;
+         EXECUTE stmt;
+         DEALLOCATE PREPARE stmt;
+      ELSEIF engine = 'MyISAM' THEN
+         -- Repair MyISAM tables
+         SET @repair_stmt = CONCAT('REPAIR TABLE ', db_name, '.', tbl_name);
+         PREPARE stmt FROM @repair_stmt;
+         EXECUTE stmt;
+         DEALLOCATE PREPARE stmt;
+      ELSE
+         -- For other engines, use OPTIMIZE
+         SET @opt_stmt = CONCAT('OPTIMIZE TABLE ', db_name, '.', tbl_name);
+         PREPARE stmt FROM @opt_stmt;
+         EXECUTE stmt;
+         DEALLOCATE PREPARE stmt;
+      END IF;
+   END LOOP;
+   CLOSE cur;
 END //
 
 DELIMITER ;

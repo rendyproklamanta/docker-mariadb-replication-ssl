@@ -51,7 +51,8 @@ find -type f -exec sed -i 's/REPL_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/MAXSCALE_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/MASTER_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-find -type f -exec sed -i 's/SUPER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+find -type f -exec sed -i 's/SUPERUSER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+find -type f -exec sed -i 's/SUPERADMIN_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 ```
 
 ---
@@ -110,16 +111,16 @@ sudo journalctl -u mariadb-repl.service
 
 ```shell
 Link : http://[YOUR_IP_ADDRESS]:8000 OR https://pma.secure.domain.com 
-user : super_usr
-pass : SUPER_PASSWORD_SET
+user : super_adm
+pass : SUPERADMIN_PASSWORD_SET
 ```
 
 - Access using Mysql-client like workbench, navicat, etc..
 
 ```shell
 host : [YOUR_IP_ADDRESS]
-user : super_usr
-pass : SUPER_PASSWORD_SET
+user : super_adm
+pass : SUPERADMIN_PASSWORD_SET
 port : 6033
 ```
 

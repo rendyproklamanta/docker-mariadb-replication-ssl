@@ -14,14 +14,14 @@ services:
         window: 120s
         max_attempts: 2
     secrets:
-      - db_super_user
-      - db_super_paswd
+      - db_superadmin
+      - db_superadmin_paswd
     environment:
       TZ: "Asia/Jakarta"
       MYSQL_PORT: "6033"
       MYSQL_HOST: "mariadb_maxscale"
-      MYSQL_USER_FILE: "/run/secrets/db_super_user"
-      MYSQL_PASS_FILE: "/run/secrets/db_super_paswd"
+      MYSQL_USER_FILE: "/run/secrets/db_superadmin"
+      MYSQL_PASS_FILE: "/run/secrets/db_superadmin_paswd"
       MAX_BACKUPS: "4"
       INIT_BACKUP: "0"
       CRON_TIME: "0 */2 * * *" # Run backup every xxx
@@ -34,9 +34,9 @@ services:
       - mariadb-network
 
 secrets:
-  db_super_user:
+  db_superadmin:
     external: true
-  db_super_paswd:
+  db_superadmin_paswd:
     external: true
 
 networks:

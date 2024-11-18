@@ -134,7 +134,7 @@ cd $SECURE_DIR/env/master && chmod +x master-secret.sh && ./master-secret.sh # C
 cd $SECURE_DIR/tls && chmod +x generate-master.sh && ./generate-master.sh # Generate certificate
 mkdir -p $DATA_DIR/master && chmod -R 755 $DATA_DIR/master  # Create directory data
 docker stack deploy --compose-file $NODES_DIR/master/docker-compose.yaml --detach=false mariadb
-cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
+cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_MASTER" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
 
 # Deploy slave1
 echo -e "${YELLOW}**** Deploy container slave1 ****${NC}"
@@ -142,14 +142,14 @@ cd $SECURE_DIR/env/slave1 && chmod +x slave1-secret.sh && ./slave1-secret.sh # C
 cd $SECURE_DIR/tls && chmod +x generate-slave1.sh && ./generate-slave1.sh # Generate certificate
 mkdir -p $DATA_DIR/slave1 && chmod -R 755 $DATA_DIR/slave1  # Create directory data
 docker stack deploy --compose-file $NODES_DIR/slave1/docker-compose.yaml --detach=false mariadb
-cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
+cd $BASE_DIR/scripts && chmod +x healthcheck.sh && set -k && ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
 
 # Resync replication
 echo -e "${YELLOW}**** Resync replication ****${NC}"
 # Sync slave to master
-cd $BASE_DIR/scripts && chmod +x replica.sh && set -k && ./replica.sh master_host="$HOST_MASTER" master_port="$PORT_MASTER" host="$HOST_SLAVE1" port="$PORT_SLAVE1" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
+cd $BASE_DIR/scripts && chmod +x replica.sh && set -k && ./replica.sh master_host="$HOST_MASTER" master_port="$PORT_MASTER" host="$HOST_SLAVE1" port="$PORT_SLAVE1" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
 # Sync master to slave (if master down)
-cd $BASE_DIR/scripts && chmod +x replica.sh && set -k && ./replica.sh master_host="$HOST_SLAVE1" master_port="$PORT_SLAVE1" host="$HOST_MASTER" port="$PORT_MASTER" user="$SUPER_USERNAME" pass="$SUPER_PASSWORD"
+cd $BASE_DIR/scripts && chmod +x replica.sh && set -k && ./replica.sh master_host="$HOST_SLAVE1" master_port="$PORT_SLAVE1" host="$HOST_MASTER" port="$PORT_MASTER" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
 
 
 ### DEPLOY SERVICES ===================================================================
