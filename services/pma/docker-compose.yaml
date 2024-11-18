@@ -11,9 +11,9 @@ services:
       MEMORY_LIMIT: 500M
       MAX_EXECUTION_TIME: 1000
       PMA_PMADB: phpmyadmin
-    #      PMA_ABSOLUTE_URI: https://pma.secure.domain.com # Uncomment if using traefik and domain name
+      #PMA_ABSOLUTE_URI: https://pma.secure.domain.com ## <== Uncomment if using traefik and domain name
     ports:
-      - 8000:80 # Commented if using traefik and domain name
+      - 8000:80 ## <== Commented if using traefik and domain name
     volumes:
       - SECURE_DIR_SET/tls:/etc/phpmyadmin/tls
       - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
@@ -27,39 +27,39 @@ services:
         delay: 5s
         window: 120s
         max_attempts: 2
-    labels:
-      - "traefik.enable=false" # Set true to enable traefik
-      - "traefik.docker.lbswarm=true"
-      - "traefik.docker.network=traefik-network"
+      labels:
+        - "traefik.enable=false" ## <== Set true to enable traefik
+        - "traefik.docker.lbswarm=true"
+        - "traefik.docker.network=traefik-network"
 
-      # http
-      - "traefik.http.routers.phpmyadmin-http.rule=Host(`pma.secure.domain.com`)"
-      - "traefik.http.routers.phpmyadmin-http.entrypoints=web"
+        ## http
+        - "traefik.http.routers.phpmyadmin-http.rule=Host(`pma.secure.domain.com`)"
+        - "traefik.http.routers.phpmyadmin-http.entrypoints=web"
 
-      # https
-      - "traefik.http.routers.phpmyadmin.rule=Host(`pma.secure.domain.com`)"
-      - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
-      - "traefik.http.routers.phpmyadmin.tls=true"
-      - "traefik.http.routers.phpmyadmin.tls.options=default"
-      - "traefik.http.routers.phpmyadmin.tls.certresolver=le"
+        ## https
+        - "traefik.http.routers.phpmyadmin.rule=Host(`pma.secure.domain.com`)"
+        - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+        - "traefik.http.routers.phpmyadmin.tls=true"
+        - "traefik.http.routers.phpmyadmin.tls.options=default"
+        - "traefik.http.routers.phpmyadmin.tls.certresolver=le"
 
-      # Service
-      - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
-      - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie=true"
-      - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.httpOnly=true"
-      - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.name=pma"
-      - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.secure=true"
+        ## Service
+        - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie=true"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.httpOnly=true"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.name=pma"
+        - "traefik.http.services.phpmyadmin.loadbalancer.sticky.cookie.secure=true"
 
-      # Middleware for http
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.phpmyadmin-http.middlewares=redirect-to-https"
+        ## Middleware for http
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+        - "traefik.http.routers.phpmyadmin-http.middlewares=redirect-to-https"
 
-      # Middleware for https
-      - "traefik.http.routers.phpmyadmin.middlewares=headers-default@file"
+        ## Middleware for https
+        - "traefik.http.routers.phpmyadmin.middlewares=headers-default@file"
 
-      # Middleware basicauth - Uncomment if you prefer basicath
-    #      - "traefik.http.routers.phpmyadmin.middlewares=pma-auth"
-    #      - "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password" # docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
+        ## Middleware basicauth - Uncomment if you prefer basicath
+        #- "traefik.http.routers.phpmyadmin.middlewares=pma-auth"
+        #- "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password" ## $ docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
     networks:
       - mariadb-network
       - traefik-network
