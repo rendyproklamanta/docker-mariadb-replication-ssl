@@ -5,6 +5,7 @@ default_authentication_plugin     = mysql_native_password
 sql-mode                          = 
 bind-address                      = 0.0.0.0
 log_bin                           = mysql-bin
+relay_log                         = mysql-relay-log
 binlog_format                     = row
 max_binlog_size                   = 1G
 expire_logs_days                  = 5
@@ -27,7 +28,6 @@ innodb_log_buffer_size            = 128M                # Increased for better p
 innodb_flush_log_at_trx_commit    = 2                   # Balance between performance and durability
 innodb_read_io_threads            = 16                  # Increased for better I/O performance
 innodb_write_io_threads           = 16                  # Increased for better I/O performance
-innodb_thread_concurrency         = 0                   # Let InnoDB adjust automatically
 innodb_purge_threads              = 4
 innodb_doublewrite                = 1
 innodb_io_capacity                = 2000                # Adjust based on your storage capabilities
@@ -55,8 +55,6 @@ general_log_file                  = /var/log/mariadb/general.log
 slow_query_log                    = 1                   # Slow query Log
 slow_query_log_file               = /var/log/mariadb/slow.log
 long_query_time                   = 30                  # Time in second to catch slow queries
-log_slow_admin_statements         = 1
-log_slow_slave_statements         = 1
 
 # Timeout
 connect_timeout                   = 600                 # Reduced to prevent hanging connections
@@ -82,18 +80,12 @@ performance_schema                                         = ON
 performance_schema_consumer_events_statements_history_long = ON
 
 # Improved Memory Allocation
-innodb_page_cleaners              = 8                   # Increased for better cleaning performance
 innodb_sort_buffer_size           = 8M                  # Increased for better sorting performance
-
-# Optimize Background Processes
-innodb_background_scrub_data_check_interval  = 3600     # Increased to reduce overhead
-innodb_background_scrub_data_interval        = 7200     # Increased to reduce overhead
 
 # Additional Optimization
 optimizer_switch                  = 'index_merge_intersection=off,mrr=on,mrr_cost_based=off'
 query_prealloc_size               = 524288              # Increased for better memory management
 innodb_adaptive_hash_index        = ON                  # Enable adaptive hash index for better performance
-innodb_change_buffering           = all                 # Enable change buffering for all operations
 innodb_lru_scan_depth             = 1024                # Adjust based on your workload
 innodb_max_dirty_pages_pct        = 90                  # Allow more dirty pages for better write performance
 innodb_max_dirty_pages_pct_lwm    = 10                  # Low water mark for dirty pages flushing

@@ -43,7 +43,12 @@ mkdir -p $DATA_DIR && chmod -R 755 $DATA_DIR
 mkdir -p $BACKUP_DIR && chmod -R 755 $BACKUP_DIR
 mkdir -p $SECURE_DIR && chmod -R 755 $SECURE_DIR
 mkdir -p $SERVICE_ALT_DIR && chmod -R 755 $SERVICE_ALT_DIR
-mkdir -p $MARIADB_LOG_DIR && chmod -R 755 $MARIADB_LOG_DIR
+
+# Create Directory MariaDB Log
+mkdir -p $MARIADB_LOG_DIR
+touch $MARIADB_LOG_DIR/general.log
+touch $MARIADB_LOG_DIR/slow.log
+chmod -R 777 $MARIADB_LOG_DIR
 
 # Set directory
 echo -e "${YELLOW}**** Setting directory ****${NC}"
