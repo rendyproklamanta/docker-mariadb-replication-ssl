@@ -35,4 +35,4 @@ while ! check_mariadb_running; do
   echo "$host not ready yet, waiting..."
 done
 
-echo "$host is running."
+echo "$host is running. (OK)"
