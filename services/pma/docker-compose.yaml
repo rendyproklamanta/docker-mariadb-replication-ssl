@@ -11,9 +11,9 @@ services:
       MEMORY_LIMIT: 500M
       MAX_EXECUTION_TIME: 1000
       PMA_PMADB: phpmyadmin
-      #PMA_ABSOLUTE_URI: https://pma.secure.domain.com ## <== Uncomment if using traefik and domain name
-    ports:
-      - 8000:80 ## <== Commented if using traefik and domain name
+      #PMA_ABSOLUTE_URI: https://pma.secure.domain.com ## <== Uncomment if using domain name
+    ports: ## <== Commented if using domain name
+      - 8000:80 ## <== Commented if using domain name
     volumes:
       - SECURE_DIR_SET/tls:/etc/phpmyadmin/tls
       - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
@@ -33,11 +33,11 @@ services:
         - "traefik.docker.network=traefik-network"
 
         ## http
-        - "traefik.http.routers.phpmyadmin-http.rule=Host(`pma.secure.domain.com`)"
+        - "traefik.http.routers.phpmyadmin-http.rule=Host(`pma.secure.domain.com`)" ## <== Change domain if traefik enable
         - "traefik.http.routers.phpmyadmin-http.entrypoints=web"
 
         ## https
-        - "traefik.http.routers.phpmyadmin.rule=Host(`pma.secure.domain.com`)"
+        - "traefik.http.routers.phpmyadmin.rule=Host(`pma.secure.domain.com`)" ## <== Change domain if traefik enable
         - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
         - "traefik.http.routers.phpmyadmin.tls=true"
         - "traefik.http.routers.phpmyadmin.tls.options=default"
@@ -57,7 +57,7 @@ services:
         ## Middleware for https
         - "traefik.http.routers.phpmyadmin.middlewares=headers-default@file"
 
-        ## Middleware basicauth - Uncomment if you prefer basicath
+        ## Middleware basicauth - Uncomment if you prefer basicauth
         #- "traefik.http.routers.phpmyadmin.middlewares=pma-auth"
         #- "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password" ## $ docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
     networks:
