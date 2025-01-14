@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Replace text
-find "$BASE_DIR" -type f -exec sed -i "s|MAX_PASSWORD_SET|$MAXSCALE_PASSWORD|g" {} +
+sudo find "$BASE_DIR" -type f -exec sed -i "s|MAX_PASSWORD_SET|$MAXSCALE_PASSWORD|g" {} +
 
 # MOVE : Conf
 echo -e "${YELLOW}**** Moving maxscale conf directory ****${NC}"
-rsync -a --delete $SERVICE_DIR/maxscale/conf/ $SECURE_DIR/conf/maxscale/
+sudo rsync -a --delete $SERVICE_DIR/maxscale/conf/ $SECURE_DIR/conf/maxscale/
 
 # maxscale_pass=$maxscale_pass
 # service_dir=$service_dir
