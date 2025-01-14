@@ -114,7 +114,7 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 ### GENERATE =======================================================================
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
-cd $BASE_DIR/scripts && sudo chmod +x initdb.sh && sudo ./initdb.sh && sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
+cd $BASE_DIR/scripts && sudo chmod +x initdb.sh && set -k && sudo -E ./initdb.sh && sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
 
 # Create sudo docker global-secret
 echo -e "${YELLOW}**** Executing global-secret.sh ****${NC}"
@@ -162,8 +162,8 @@ cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.
 echo '**** Deploy services ****'
 
 # Deploy MaxScale
-source $SERVICE_DIR/maxscale/init.sh
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
+cd $SERVICE_DIR/maxscale && sudo chmod +x init.sh && set -k && sudo -E ./init.sh base_dir=$BASE_DIR maxscale_pass=$MAXSCALE_PASSWORD service_dir=$SERVICE_DIR secure_dir=$SECURE_DIR
 cd $SECURE_DIR/tls && sudo chmod +x generate-maxscale.sh && sudo ./generate-maxscale.sh # Generate certificate
 sudo mkdir -p /var/log/maxscale && sudo touch /var/log/maxscale/maxscale.log && sudo chmod -R 777 /var/log/maxscale/maxscale.log # Create log
 sudo docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb
