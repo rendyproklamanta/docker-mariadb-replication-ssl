@@ -10,4 +10,4 @@ sudo find "$base_dir" -type f -exec sed -i "s|MAXSCALE_PASSWORD_SET|$maxscale_pa
 
 # MOVE : Conf
 echo -e "${YELLOW}**** Moving maxscale conf directory ****${NC}"
-sudo rsync -a --delete $service_dir/maxscale/conf/ $secure_dir/conf/maxscale/
+sudo rsync -a --delete $service_dir/maxscale/conf/$secure_dir/conf/maxscale/

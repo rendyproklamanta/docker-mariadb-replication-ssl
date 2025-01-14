@@ -114,7 +114,7 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 ### GENERATE =======================================================================
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
-cd $BASE_DIR/scripts && sudo chmod +x initdb.sh && set -k && sudo -E ./initdb.sh && sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
+cd $BASE_DIR/scripts && sudo chmod +x initdb.sh && sudo -E ./initdb.sh && sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
 
 # Create sudo docker global-secret
 echo -e "${YELLOW}**** Executing global-secret.sh ****${NC}"
