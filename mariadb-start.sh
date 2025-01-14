@@ -114,47 +114,46 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 ### GENERATE =======================================================================
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
-sudo mkdir -p $BASE_DIR/scripts/initdb
 source $BASE_DIR/scripts/initdb.sh
-# Moving initdb to secure_dir
-sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
+sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/ # Moving initdb to secure_dir
 
 # Create sudo docker global-secret
 echo -e "${YELLOW}**** Executing global-secret.sh ****${NC}"
-cd $SECURE_DIR/env/global && sudo chmod +x global-secret.sh && sudo ./global-secret.sh 
+source $SECURE_DIR/env/global/global-secret.sh
 
 # Generate encryption
 echo -e "${YELLOW}**** Generating encryption ****${NC}"
-cd $SECURE_DIR/encryption && sudo chmod +x generate.sh && sudo ./generate.sh && sudo chmod -R 755 $SECURE_DIR/encryption
+source $SECURE_DIR/encryption/generate.sh
+sudo chmod -R 755 $SECURE_DIR/encryption
 
 # Generate CA certificate
 echo -e "${YELLOW}**** Generating CA cert ****${NC}"
-cd $SECURE_DIR/tls && sudo chmod +x generate-ca.sh && sudo ./generate-ca.sh
+source $SECURE_DIR/tls/generate-ca.sh
 
 # Generate CLIENT certificate
 echo -e "${YELLOW}**** Generating Client cert ****${NC}"
-cd $SECURE_DIR/tls && sudo chmod +x generate-client.sh && sudo ./generate-client.sh
+source $SECURE_DIR/tls/generate-client.sh
 
 
 ### DEPLOY NODES =====================================================================
 # Deploy master
 echo -e "${YELLOW}**** Deploy container ${HOST_MASTER} ****${NC}"
-cd $SECURE_DIR/env/master && sudo chmod +x master-secret.sh && sudo ./master-secret.sh # Create sudo docker secrets
-cd $SECURE_DIR/tls && sudo chmod +x generate-master.sh && sudo ./generate-master.sh # Generate certificate
+source $SECURE_DIR/env/master/master-secret.sh
+source $SECURE_DIR/tls/generate-master.sh
 sudo mkdir -p $DATA_DIR/master && sudo chmod -R 755 $DATA_DIR/master  # Create directory data
 sudo docker stack deploy --compose-file $NODES_DIR/master/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./healthcheck.sh host="$HOST_MASTER" user="root" pass="$MASTER_ROOT_PASSWORD"
 
 # Deploy slave1
 echo -e "${YELLOW}**** Deploy container ${HOST_SLAVE1} ****${NC}"
-cd $SECURE_DIR/env/slave1 && sudo chmod +x slave1-secret.sh && sudo ./slave1-secret.sh # Create sudo docker secrets
-cd $SECURE_DIR/tls && sudo chmod +x generate-slave1.sh && sudo ./generate-slave1.sh # Generate certificate
+source $SECURE_DIR/env/slave1/slave1-secret.sh
+source $SECURE_DIR/tls/generate-slave1.sh
 sudo mkdir -p $DATA_DIR/slave1 && sudo chmod -R 755 $DATA_DIR/slave1  # Create directory data
 sudo docker stack deploy --compose-file $NODES_DIR/slave1/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./healthcheck.sh host="$HOST_SLAVE1" user="root" pass="$SLAVE1_ROOT_PASSWORD"
 
 # Resync replication
-echo -e "${YELLOW}**** Resync replication ****${NC}"
+echo -e "${YELLOW}**** Start replication ****${NC}"
 # Sync slave to master
 cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.sh master_host="$HOST_MASTER" master_port="$PORT_MASTER" master_pass="$MASTER_ROOT_PASSWORD" host="$HOST_SLAVE1" user="root" pass="$SLAVE1_ROOT_PASSWORD"
 # Sync master to slave (if master down)
@@ -166,9 +165,8 @@ echo '**** Deploy services ****'
 
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
+source $SECURE_DIR/tls/generate-maxscale.sh
 source $SERVICE_DIR/maxscale/init.sh
-cd $SECURE_DIR/tls && sudo chmod +x generate-maxscale.sh && sudo ./generate-maxscale.sh # Generate certificate
-sudo mkdir -p /var/log/maxscale && sudo touch /var/log/maxscale/maxscale.log && sudo chmod -R 777 /var/log/maxscale/maxscale.log # Create log
 sudo docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb
 
 # Deploy PMA
@@ -189,7 +187,8 @@ sudo docker stack deploy --compose-file $SERVICE_DIR/backup/docker-compose.yaml 
 ### ADDITIONAL COMMANDS ===================================================================
 # Enable startup service
 echo -e "${YELLOW}**** Set auto startup mariadb service ****${NC}"
-sudo cp $BASE_DIR/mariadb-repl.service /etc/systemd/system/mariadb-repl.service
+sudo rsync -a --delete $BASE_DIR/mariadb-repl.service /etc/systemd/system/mariadb-repl.service
+sudo systemctl daemon-reload
 sudo systemctl enable mariadb-repl.service
 
 # Removing unnecessary files

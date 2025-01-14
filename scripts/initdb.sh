@@ -1,7 +1,9 @@
 #!/bin/bash
 
+sudo mkdir -p initdb
+
 # Generate the init.sql file for user replica
-sudo tee "$BASE_DIR/scripts/initdb/01-init.sql" > /dev/null <<EOF
+sudo tee "initdb/01-init.sql" > /dev/null <<EOF
 -- Set the global time zone
 SET GLOBAL time_zone = '$TIMEZONE';
 
@@ -47,4 +49,4 @@ ALTER USER 'root'@'%' ACCOUNT LOCK;
 FLUSH PRIVILEGES;
 EOF
 
-echo "init.sql file generated successfully."
+echo -e "${YELLOW}**** init.sql file generated successfully to ${BASe_DIR}/scripts ****${NC}"
