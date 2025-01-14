@@ -122,23 +122,25 @@ source $SECURE_DIR/env/global/global-secret.sh
 
 # Generate encryption
 echo -e "${YELLOW}**** Generating encryption ****${NC}"
-source $SECURE_DIR/encryption/generate.sh
-sudo chmod -R 755 $SECURE_DIR/encryption
+cd $SECURE_DIR/encryption && source $SECURE_DIR/encryption/generate.sh
+
+# Set permission to directory TLS
+sudo chmod -R 755 $SECURE_DIR/tls
 
 # Generate CA certificate
 echo -e "${YELLOW}**** Generating CA cert ****${NC}"
-source $SECURE_DIR/tls/generate-ca.sh
+cd $SECURE_DIR/tls && source $SECURE_DIR/tls/generate-ca.sh
 
 # Generate CLIENT certificate
 echo -e "${YELLOW}**** Generating Client cert ****${NC}"
-source $SECURE_DIR/tls/generate-client.sh
+cd $SECURE_DIR/tls && source $SECURE_DIR/tls/generate-client.sh
 
 
 ### DEPLOY NODES =====================================================================
 # Deploy master
 echo -e "${YELLOW}**** Deploy container ${HOST_MASTER} ****${NC}"
 source $SECURE_DIR/env/master/master-secret.sh
-source $SECURE_DIR/tls/generate-master.sh
+cd $SECURE_DIR/tls && source $SECURE_DIR/tls/generate-master.sh
 sudo mkdir -p $DATA_DIR/master && sudo chmod -R 755 $DATA_DIR/master  # Create directory data
 sudo docker stack deploy --compose-file $NODES_DIR/master/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./healthcheck.sh host="$HOST_MASTER" user="root" pass="$MASTER_ROOT_PASSWORD"
@@ -146,7 +148,7 @@ cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./heal
 # Deploy slave1
 echo -e "${YELLOW}**** Deploy container ${HOST_SLAVE1} ****${NC}"
 source $SECURE_DIR/env/slave1/slave1-secret.sh
-source $SECURE_DIR/tls/generate-slave1.sh
+cd $SECURE_DIR/tls && source $SECURE_DIR/tls/generate-slave1.sh
 sudo mkdir -p $DATA_DIR/slave1 && sudo chmod -R 755 $DATA_DIR/slave1  # Create directory data
 sudo docker stack deploy --compose-file $NODES_DIR/slave1/docker-compose.yaml --detach=false mariadb
 cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./healthcheck.sh host="$HOST_SLAVE1" user="root" pass="$SLAVE1_ROOT_PASSWORD"
@@ -164,7 +166,7 @@ echo '**** Deploy services ****'
 
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
-source $SECURE_DIR/tls/generate-maxscale.sh
+cd $SECURE_DIR/tls && source $SECURE_DIR/tls/generate-maxscale.sh
 source $SERVICE_DIR/maxscale/init.sh
 sudo docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb
 

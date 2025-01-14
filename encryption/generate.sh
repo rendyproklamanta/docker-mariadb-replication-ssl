@@ -31,3 +31,5 @@ sudo rm "$KEYFILE"
 
 # Set permissions for the generated files
 sudo chmod 640 "$KEYFILE"*  # Apply to all matching keyfile* files
+
+sudo find . -type f -exec chmod 755 {} \;
