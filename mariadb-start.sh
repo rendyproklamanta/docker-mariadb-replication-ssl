@@ -163,7 +163,8 @@ echo '**** Deploy services ****'
 
 # Deploy MaxScale
 echo -e "${YELLOW}**** Deploy maxscale container ****${NC}"
-cd $SERVICE_DIR/maxscale && sudo chmod +x init.sh && set -k && sudo -E ./init.sh base_dir=$BASE_DIR maxscale_pass=$MAXSCALE_PASSWORD service_dir=$SERVICE_DIR secure_dir=$SECURE_DIR
+# cd $SERVICE_DIR/maxscale && sudo chmod +x init.sh && set -k && sudo -E ./init.sh base_dir=$BASE_DIR maxscale_pass=$MAXSCALE_PASSWORD service_dir=$SERVICE_DIR secure_dir=$SECURE_DIR
+cd $SERVICE_DIR/maxscale && sudo chmod +x init.sh && sudo -E ./init.sh
 cd $SECURE_DIR/tls && sudo chmod +x generate-maxscale.sh && sudo ./generate-maxscale.sh # Generate certificate
 sudo mkdir -p /var/log/maxscale && sudo touch /var/log/maxscale/maxscale.log && sudo chmod -R 777 /var/log/maxscale/maxscale.log # Create log
 sudo docker stack deploy --compose-file $SERVICE_DIR/maxscale/docker-compose.yaml --detach=false mariadb
