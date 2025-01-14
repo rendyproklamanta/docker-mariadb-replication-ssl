@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Create initdb directory if it doesn't exist
-mkdir -p initdb
-
 # Generate the init.sql file for user replica
-cat <<EOF > initdb/01-init.sql
+cat <<EOF > $BASE_DIR/scripts/initdb/01-init.sql
 -- Set the global time zone
 SET GLOBAL time_zone = '$TIMEZONE';
 

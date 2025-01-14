@@ -114,7 +114,9 @@ source $SECURE_DIR/env/slave1/slave1-env.sh
 ### GENERATE =======================================================================
 # Initdb
 echo -e "${YELLOW}**** Executing initdb ****${NC}"
+sudo mkdir -p $BASE_DIR/scripts/initdb
 source $BASE_DIR/scripts/initdb.sh
+# Moving initdb to secure_dir
 sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/
 
 # Create sudo docker global-secret
