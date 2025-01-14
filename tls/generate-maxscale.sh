@@ -13,7 +13,7 @@ if [ "$generate_new" = true ] || [ ! -f maxscale-key.pem ] || [ ! -f maxscale-ce
    sudo openssl genrsa -out maxscale-key.pem 2048
    sudo openssl req -new -key maxscale-key.pem -out maxscale-req.pem -subj "/CN=$MAXSCALE_CN"
    sudo openssl x509 -req -in maxscale-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out maxscale-cert.pem -days $EXPIRY_DAY -sha256
-   rm -f maxscale-req.pem
+   sudo rm -f maxscale-req.pem
 else
    echo "MaxScale certificate already exists, skipping."
 fi
