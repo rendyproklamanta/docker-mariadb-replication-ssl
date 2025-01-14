@@ -7,13 +7,13 @@ pass=$pass
 
 WAIT_TIMEOUT=300
 
-container_id=$(docker ps -q -f "name=$host")
+container_id=$(sudo docker ps -q -f "name=$host")
 
 # Function to check is running inside the container
 check_mariadb_running() {
   echo "Checking $host is running..."
   sleep 5
-  docker exec $container_id mariadb -u$user --password=$pass --execute="SELECT 1" > /dev/null 2>&1
+  sudo docker exec $container_id mariadb -u$user --password=$pass --execute="SELECT 1" > /dev/null 2>&1
 }
 
 # Check if the container is running

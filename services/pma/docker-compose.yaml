@@ -59,7 +59,7 @@ services:
 
         ## Middleware basicauth - Uncomment if you prefer basicauth
         #- "traefik.http.routers.phpmyadmin.middlewares=pma-auth"
-        #- "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password" ## $ docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
+        #- "traefik.http.middlewares.pma-auth.basicauth.users=pma_user:generated_password" ## $ sudo docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
     networks:
       - mariadb-network
       - traefik-network

@@ -33,60 +33,60 @@
 
 ## Steps
 
-**1. Create dir and clone**
+## 1. Create dir and clone
 
 ```shell
-mkdir -p /var/lib/mariadb
+sudo mkdir -p /var/lib/mariadb
 cd /var/lib/mariadb
-git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
+sudo git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```
 
 ---
 
-**2. Change Password by using text replacing tool**
+## 2. Change Password by using text replacing tool**
 
 ```shell
 cd /var/lib/mariadb
-find -type f -exec sed -i 's/REPL_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-find -type f -exec sed -i 's/MAXSCALE_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-find -type f -exec sed -i 's/MASTER_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-find -type f -exec sed -i 's/SUPERUSER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-find -type f -exec sed -i 's/SUPERADMIN_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+sudo find -type f -exec sed -i 's/REPL_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+sudo find -type f -exec sed -i 's/MAXSCALE_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+sudo find -type f -exec sed -i 's/MASTER_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+sudo find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+sudo find -type f -exec sed -i 's/SUPERUSER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+sudo find -type f -exec sed -i 's/SUPERADMIN_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 ```
 
 ---
 
-**3. Change domain PMA**
+## Change domain PMA
 
 ```shell
-nano /var/lib/mariadb/services/pma/docker-compose.yaml 
+sudo nano /var/lib/mariadb/services/pma/docker-compose.yaml 
 ```
 
 ---
 
-**4. Adding port to firewall**
+## Adding port to firewall
 
 ```shell
-ufw allow 3306
-ufw allow 6033
-ufw allow 3301
-ufw allow 3302
-ufw allow 8989
+sudo ufw allow 3306
+sudo ufw allow 6033
+sudo ufw allow 3301
+sudo ufw allow 3302
+sudo ufw allow 8989
 ```
 
-**5. Move start.sh to safety place**
+## Move start.sh to safety place**
 
 ```shell
 cd /var/lib/mariadb
-mv start.sh /etc/init.d/start.sh
+sudo mv start.sh /etc/init.d/start.sh
 ```
 
 **6. Set permission and start!**
 
 ```shell
 cd /etc/init.d
-chmod +x start.sh && ./start.sh
+sudo chmod +x start.sh && sudo ./start.sh
 ```
 
 - Test reboot :

@@ -3,7 +3,7 @@
 - Generate
 
 ```shell
-docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
+sudo docker run --rm httpd:2.4-alpine htpasswd -nbB pma_user password-length-8
 ```
 
 - Result
