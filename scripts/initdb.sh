@@ -1,9 +1,9 @@
 #!/bin/bash
 
-sudo mkdir -p initdb
+sudo mkdir -p $BASE_DIR/scripts/initdb
 
 # Generate the init.sql file for user replica
-sudo tee "initdb/01-init.sql" > /dev/null <<EOF
+sudo tee "$BASE_DIR/scripts/initdb/01-init.sql" > /dev/null <<EOF
 -- Set the global time zone
 SET GLOBAL time_zone = '$TIMEZONE';
 
@@ -49,4 +49,6 @@ ALTER USER 'root'@'%' ACCOUNT LOCK;
 FLUSH PRIVILEGES;
 EOF
 
-echo -e "${YELLOW}**** init.sql file generated successfully to ${BASe_DIR}/scripts ****${NC}"
+echo -e "${YELLOW}**** init.sql file generated successfully to ${BASE_DIR}/scripts ****${NC}"
+
+sudo rsync -a --delete $BASE_DIR/scripts/initdb/ $SECURE_DIR/initdb/ # Moving initdb to secure_dir
