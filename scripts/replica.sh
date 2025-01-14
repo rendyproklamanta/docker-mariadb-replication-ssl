@@ -18,7 +18,7 @@ position=$(echo $result|awk '{print $5}')
 
 echo "Change Master to replication"
 sudo docker exec $(sudo docker ps -q -f "name=$host") \
-	mariadb -u$user -p=$pass\
+	mariadb -u$user -p$pass\
 	--execute="
 
 	STOP SLAVE;\
