@@ -1,7 +1,7 @@
 #!/bin/bash
 
 maxscale_pass=$maxscale_pass
-service_dir=$maxscale_pass
+service_dir=$service_dir
 secure_dir=$secure_dir
 base_dir=$base_dir
 

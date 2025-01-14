@@ -153,9 +153,9 @@ cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./heal
 # Resync replication
 echo -e "${YELLOW}**** Resync replication ****${NC}"
 # Sync slave to master
-cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.sh master_host="$HOST_MASTER" master_port="$PORT_MASTER" master_pass="$MASTER_ROOT_PASSWORD" host="$HOST_SLAVE1" port="$PORT_SLAVE1" user="root" pass="$SLAVE1_ROOT_PASSWORD"
+cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.sh master_host="$HOST_MASTER" master_port="$PORT_MASTER" master_pass="$MASTER_ROOT_PASSWORD" host="$HOST_SLAVE1" user="root" pass="$SLAVE1_ROOT_PASSWORD"
 # Sync master to slave (if master down)
-cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.sh master_host="$HOST_SLAVE1" master_port="$PORT_SLAVE1" master_pass="$SLAVE1_ROOT_PASSWORD" host="$HOST_MASTER" port="$PORT_MASTER" user="root" pass="$MASTER_ROOT_PASSWORD"
+cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.sh master_host="$HOST_SLAVE1" master_port="$PORT_SLAVE1" master_pass="$SLAVE1_ROOT_PASSWORD" host="$HOST_MASTER" user="root" pass="$MASTER_ROOT_PASSWORD"
 
 
 ### DEPLOY SERVICES ===================================================================
