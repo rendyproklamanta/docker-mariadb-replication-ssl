@@ -24,7 +24,7 @@ sudo docker network create --driver overlay mariadb-network
 sudo docker network create --driver overlay traefik-network
 
 # Stopping all services
-sudo docker stack sudo rm mariadb
+sudo docker stack rm mariadb
 
 # CLONE : Check if the destination file/directory is exists (mariadb)
 if [ -e "$BASE_DIR" ]; then
@@ -32,7 +32,7 @@ if [ -e "$BASE_DIR" ]; then
 else
    sudo mkdir -p $BASE_DIR
    cd $BASE_DIR
-   git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
+   sudo git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 fi
 
 # Change atrributes
@@ -93,7 +93,6 @@ source $SECURE_DIR/env/global/global-env.sh
 source $SECURE_DIR/env/master/master-env.sh
 source $SECURE_DIR/env/slave1/slave1-env.sh
 
-
 ### !!IF YOUR TLS/SSL EXPIRED!!
 ### -----------------------------------------------------
 ### Generate a new one by uncomment below and do sudo ./start again
@@ -136,27 +135,27 @@ cd $SECURE_DIR/tls && sudo chmod +x generate-client.sh && sudo ./generate-client
 
 ### DEPLOY NODES =====================================================================
 # Deploy master
-echo -e "${YELLOW}**** Deploy container master ****${NC}"
+echo -e "${YELLOW}**** Deploy container ${HOST_MASTER} ****${NC}"
 cd $SECURE_DIR/env/master && sudo chmod +x master-secret.sh && sudo ./master-secret.sh # Create sudo docker secrets
 cd $SECURE_DIR/tls && sudo chmod +x generate-master.sh && sudo ./generate-master.sh # Generate certificate
 sudo mkdir -p $DATA_DIR/master && sudo chmod -R 755 $DATA_DIR/master  # Create directory data
 sudo docker stack deploy --compose-file $NODES_DIR/master/docker-compose.yaml --detach=false mariadb
-cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo ./healthcheck.sh host="$HOST_MASTER" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
+cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./healthcheck.sh host="$HOST_MASTER" user="root" pass="$MASTER_ROOT_PASSWORD"
 
 # Deploy slave1
-echo -e "${YELLOW}**** Deploy container slave1 ****${NC}"
+echo -e "${YELLOW}**** Deploy container ${HOST_SLAVE1} ****${NC}"
 cd $SECURE_DIR/env/slave1 && sudo chmod +x slave1-secret.sh && sudo ./slave1-secret.sh # Create sudo docker secrets
 cd $SECURE_DIR/tls && sudo chmod +x generate-slave1.sh && sudo ./generate-slave1.sh # Generate certificate
 sudo mkdir -p $DATA_DIR/slave1 && sudo chmod -R 755 $DATA_DIR/slave1  # Create directory data
 sudo docker stack deploy --compose-file $NODES_DIR/slave1/docker-compose.yaml --detach=false mariadb
-cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo ./healthcheck.sh host="$HOST_SLAVE1" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
+cd $BASE_DIR/scripts && sudo chmod +x healthcheck.sh && set -k && sudo -E ./healthcheck.sh host="$HOST_SLAVE1" user="root" pass="$SLAVE1_ROOT_PASSWORD"
 
 # Resync replication
 echo -e "${YELLOW}**** Resync replication ****${NC}"
 # Sync slave to master
-cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo ./replica.sh master_host="$HOST_MASTER" master_port="$PORT_MASTER" host="$HOST_SLAVE1" port="$PORT_SLAVE1" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
+cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.sh master_host="$HOST_MASTER" master_port="$PORT_MASTER" master_pass="$MASTER_ROOT_PASSWORD" host="$HOST_SLAVE1" port="$PORT_SLAVE1" user="root" pass="$SLAVE1_ROOT_PASSWORD"
 # Sync master to slave (if master down)
-cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo ./replica.sh master_host="$HOST_SLAVE1" master_port="$PORT_SLAVE1" host="$HOST_MASTER" port="$PORT_MASTER" user="$SUPERADMIN_USERNAME" pass="$SUPERADMIN_PASSWORD"
+cd $BASE_DIR/scripts && sudo chmod +x replica.sh && set -k && sudo -E ./replica.sh master_host="$HOST_SLAVE1" master_port="$PORT_SLAVE1" master_pass="$SLAVE1_ROOT_PASSWORD" host="$HOST_MASTER" port="$PORT_MASTER" user="root" pass="$MASTER_ROOT_PASSWORD"
 
 
 ### DEPLOY SERVICES ===================================================================

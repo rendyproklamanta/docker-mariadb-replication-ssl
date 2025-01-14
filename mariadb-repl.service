@@ -3,7 +3,7 @@ Description=MySQL Stack Deployment
 After=network.target
 
 [Service]
-ExecStart=/etc/init.d/start.sh
+ExecStart=/etc/init.d/mariadb-start.sh
 
 [Install]
 WantedBy=default.target

@@ -42,7 +42,7 @@ type              = monitor
 module            = mariadbmon
 servers           = server1,server2
 user              = max_usr
-password          = MAXCONF_PASSWORD_SET
+password          = MAXSCALE_PASSWORD_SET
 auto_failover     = 1
 auto_rejoin       = true
 failcount         = 5
@@ -70,7 +70,7 @@ type              = service
 router            = readwritesplit
 servers           = server1,server2
 user              = max_usr
-password          = MAXCONF_PASSWORD_SET
+password          = MAXSCALE_PASSWORD_SET
 #filters           = dbfw-blacklist
 
 

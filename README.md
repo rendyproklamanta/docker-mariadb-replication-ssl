@@ -79,14 +79,14 @@ sudo ufw allow 8989
 
 ```shell
 cd /var/lib/mariadb
-sudo mv start.sh /etc/init.d/start.sh
+sudo mv mariadb-start.sh /etc/init.d/mariadb-start.sh
 ```
 
-**6. Set permission and start!**
+## Set permission and start the mariadb service**
 
 ```shell
 cd /etc/init.d
-sudo chmod +x start.sh && sudo ./start.sh
+sudo chmod +x mariadb-start.sh && sudo ./mariadb-start.sh
 ```
 
 - Test reboot :

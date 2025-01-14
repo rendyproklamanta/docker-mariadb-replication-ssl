@@ -6,13 +6,14 @@ user=$user
 pass=$pass
 master_host=$master_host
 master_port=$master_port
+master_pass=$master_pass
 
 echo
 echo ===[ Starting to resync $host ]===
 echo
 
 # Get the log position and name from master
-result=$(sudo docker exec $(sudo docker ps -q -f "name=$master_host") mariadb -u$user --password=$pass --execute="show master status;")
+result=$(sudo docker exec $(sudo docker ps -q -f "name=$master_host") mariadb -u$user --password=$master_pass --execute="show master status;")
 log=$(echo $result|awk '{print $6}')
 position=$(echo $result|awk '{print $5}')
 
