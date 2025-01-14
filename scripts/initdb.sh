@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Generate the init.sql file for user replica
-cat <<EOF > $BASE_DIR/scripts/initdb/01-init.sql
+sudo tee "$BASE_DIR/scripts/initdb/01-init.sql" > /dev/null <<EOF
 -- Set the global time zone
 SET GLOBAL time_zone = '$TIMEZONE';
 
