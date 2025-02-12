@@ -69,7 +69,7 @@ sudo nano /var/lib/mariadb/services/pma/docker-compose.yaml
 
 ```shell
 sudo ufw allow 3306
-sudo ufw allow 6033
+sudo ufw allow 60330
 sudo ufw allow 3301
 sudo ufw allow 3302
 sudo ufw allow 8989
@@ -121,7 +121,7 @@ pass : SUPERADMIN_PASSWORD_SET
 host : [YOUR_IP_ADDRESS]
 user : super_adm
 pass : SUPERADMIN_PASSWORD_SET
-port : 6033
+port : 60330
 ```
 
 - Access MaxScale web UI
@@ -137,7 +137,7 @@ pass : mariadb
 ```shell
 Maxscale
 host : mariadb_maxscale
-port : 6033
+port : 60330
 ---------------------------
 Master
 host : mariadb_master

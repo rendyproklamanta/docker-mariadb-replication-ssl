@@ -6,7 +6,7 @@ services:
     environment:
       TZ: Asia/Jakarta
       PMA_HOST_FILE: /run/secrets/db_host
-      PMA_PORT: 6033
+      PMA_PORT: MAXSCALE_PORT_SET
       UPLOAD_LIMIT: 2G
       MEMORY_LIMIT: 500M
       MAX_EXECUTION_TIME: 1000

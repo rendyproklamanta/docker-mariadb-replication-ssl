@@ -19,7 +19,7 @@ services:
       - SECURE_DIR_SET/tls:/etc/maxscale/tls
       - /var/log/maxscale:/var/log/maxscale
     ports:
-      - 6033:6033
+      - MAXSCALE_PORT_SET:MAXSCALE_PORT_SET
       - 8989:8989
     networks:
       - mariadb-network

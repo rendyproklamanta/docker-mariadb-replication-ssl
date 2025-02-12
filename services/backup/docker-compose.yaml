@@ -18,7 +18,7 @@ services:
       - db_superadmin_paswd
     environment:
       TZ: "Asia/Jakarta"
-      MYSQL_PORT: "6033"
+      MYSQL_PORT: MAXSCALE_PORT_SET
       MYSQL_HOST: "mariadb_maxscale"
       MYSQL_USER_FILE: "/run/secrets/db_superadmin"
       MYSQL_PASS_FILE: "/run/secrets/db_superadmin_paswd"

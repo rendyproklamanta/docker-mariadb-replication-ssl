@@ -57,11 +57,11 @@ slow_query_log_file               = /var/log/mariadb/slow.log
 long_query_time                   = 30                  # Time in second to catch slow queries
 
 # Timeout
-connect_timeout                   = 300                 # Reduced to prevent hanging connections
-wait_timeout                      = 300                 # Reduced to free up resources faster
-interactive_timeout               = 300                 # Reduced to free up resources faster
-net_read_timeout                  = 300                 # Reduced for better responsiveness
-net_write_timeout                 = 300                 # Reduced for better responsiveness
+connect_timeout                   = 600                 # Reduced to prevent hanging connections
+wait_timeout                      = 600                 # Reduced to free up resources faster
+interactive_timeout               = 600                 # Reduced to free up resources faster
+net_read_timeout                  = 600                 # Reduced for better responsiveness
+net_write_timeout                 = 600                 # Reduced for better responsiveness
 
 # Buffer Settings
 tmp_table_size                    = 512M                # Increased for better performance

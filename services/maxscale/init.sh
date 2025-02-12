@@ -1,5 +1,10 @@
 #!/bin/bash
 
+MAXSCALE_PORT="60330"
+
+# Setting port maxscale
+sudo find "$BASE_DIR" -type f -exec sed -i "s|MAXSCALE_PORT_SET|$MAXSCALE_PORT|g" {} +
+
 # Create log
 echo -e "${YELLOW}**** Create log maxscale ****${NC}"
 sudo mkdir -p /var/log/maxscale

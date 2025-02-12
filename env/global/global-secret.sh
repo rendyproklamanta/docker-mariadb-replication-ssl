@@ -9,7 +9,7 @@ sudo docker secret rm db_superuser
 sudo docker secret rm db_superuser_paswd
 
 ## Create secret
-echo "6033" | sudo docker secret create db_port -
+echo "MAXSCALE_PORT_SET" | sudo docker secret create db_port -
 echo "mariadb_maxscale" | sudo docker secret create db_host -
 echo "super_adm" | sudo docker secret create db_superadmin -
 echo "SUPERADMIN_PASSWORD_SET" | sudo docker secret create db_superadmin_paswd -
