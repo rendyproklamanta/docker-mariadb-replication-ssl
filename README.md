@@ -49,6 +49,7 @@ sudo git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ss
 cd /var/lib/mariadb
 sudo find -type f -exec sed -i 's/REPL_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 sudo find -type f -exec sed -i 's/MAXSCALE_PASSWORD_SET/YOUR_PASSWORD/g' {} +
+sudo find -type f -exec sed -i 's/MAXSCALE_PORT_SET/YOUR_PORT/g' {} +
 sudo find -type f -exec sed -i 's/MASTER_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 sudo find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
 sudo find -type f -exec sed -i 's/SUPERUSER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
