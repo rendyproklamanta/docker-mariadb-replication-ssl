@@ -43,7 +43,7 @@ sudo git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ss
 
 ---
 
-## 2. Change Password by using text replacing tool**
+## 2. Change Password by using text replacing tool
 
 ```shell
 cd /var/lib/mariadb
@@ -76,14 +76,14 @@ sudo ufw allow 3302
 sudo ufw allow 8989
 ```
 
-## Move start.sh to safety place**
+## Move start.sh to safety place
 
 ```shell
 cd /var/lib/mariadb
 sudo mv mariadb-start.sh /etc/init.d/mariadb-start.sh
 ```
 
-## Set permission and start the mariadb service**
+## Set permission and start the mariadb service
 
 ```shell
 cd /etc/init.d
