@@ -64,7 +64,6 @@ net_read_timeout                  = 600                 # Reduced for better res
 net_write_timeout                 = 600                 # Reduced for better responsiveness
 max_statement_time                = 60                  # Kill queries running longer than n seconds
 
-
 # Buffer Settings
 tmp_table_size                    = 512M                # Increased for better performance
 max_heap_table_size               = 512M                # Increased to match tmp_table_size
