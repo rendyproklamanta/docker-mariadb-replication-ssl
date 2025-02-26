@@ -62,6 +62,8 @@ wait_timeout                      = 600                 # Reduced to free up res
 interactive_timeout               = 600                 # Reduced to free up resources faster
 net_read_timeout                  = 600                 # Reduced for better responsiveness
 net_write_timeout                 = 600                 # Reduced for better responsiveness
+max_statement_time                = 60                  # Kill queries running longer than n seconds
+
 
 # Buffer Settings
 tmp_table_size                    = 512M                # Increased for better performance
