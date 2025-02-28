@@ -33,6 +33,11 @@
 
 ## Steps
 
+## Create Network
+```sh
+docker network create --driver overlay mariadb-network
+```
+
 ## 1. Create dir and clone
 
 ```shell
