@@ -69,11 +69,8 @@ sudo nano /var/lib/mariadb/services/pma/docker-compose.yaml
 ## Adding port to firewall
 
 ```shell
-sudo ufw allow 3306
 sudo ufw allow 60330
-sudo ufw allow 3301
-sudo ufw allow 3302
-sudo ufw allow 8989
+sudo ufw allow 58989
 ```
 
 ## Move start.sh to safety place
@@ -128,7 +125,7 @@ port : 60330
 - Access MaxScale web UI
 
 ```shell
-Link : http://[YOUR_IP_ADDRESS]:8989
+Link : http://[YOUR_IP_ADDRESS]:58989
 user : admin
 pass : mariadb
 ```

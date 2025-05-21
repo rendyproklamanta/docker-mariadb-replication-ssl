@@ -20,7 +20,7 @@ services:
       - /var/log/maxscale:/var/log/maxscale
     ports:
       - MAXSCALE_PORT_SET:MAXSCALE_PORT_SET
-      - 8989:8989
+      - 58989:58989
     networks:
       - mariadb-network
 
