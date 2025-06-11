@@ -16,6 +16,10 @@ BACKUP_DIR="/backup/mariadb"
 SECURE_DIR="/etc/secure/mariadb"
 SHARED_VOLUME="" # Add ":z" if you using shared volume like /mnt blockstorage
 
+# adding port to firewall
+sudo ufw allow 60330
+sudo ufw allow 58989
+
 # init docker swarm
 sudo docker swarm init
 

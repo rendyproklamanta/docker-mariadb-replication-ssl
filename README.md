@@ -14,14 +14,13 @@
 - Maxscale 21.06
 - PhpMyAdmin
 
-## Included
+## Extra Features
 
-- [x] [Secure server & client: TLS/SSL](https://mariadb.com/kb/en/securing-connections-for-client-and-server)
-- [x] [Encryption: Data-at-Rest](https://mariadb.com/kb/en/data-at-rest-encryption-overview/)
-- [x] [Maxscale firewall: Query Blacklist Filter](https://mariadb.com/kb/en/mariadb-maxscale-24-database-firewall-filte)
-- [x] Backup schedule by cron
+- ✅ [Encryption at Transport](https://mariadb.com/kb/en/securing-connections-for-client-and-server)
+- ✅ [Encryption at Rest](https://mariadb.com/kb/en/data-at-rest-encryption-overview/)
+- ✅ Backup scheduled by cron
 
-## Not Included (optional)
+## Optional Features
 
 - [Backup to S3](https://github.com/rendyproklamanta/docker-mysql-backup-s3)
 - [User password rotation](https://github.com/rendyproklamanta/docker-mysql-credential-rolling) - to prevent credential leaks
@@ -38,7 +37,7 @@
 docker network create --driver overlay mariadb-network
 ```
 
-## 1. Create dir and clone
+## Create dir and clone
 
 ```shell
 sudo mkdir -p /var/lib/mariadb
@@ -46,37 +45,12 @@ cd /var/lib/mariadb
 sudo git clone https://github.com/rendyproklamanta/docker-mariadb-replication-ssl.git .
 ```
 
----
-
-## 2. Change Password by using text replacing tool
-
-```shell
-cd /var/lib/mariadb
-sudo find -type f -exec sed -i 's/REPL_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-sudo find -type f -exec sed -i 's/MAXSCALE_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-sudo find -type f -exec sed -i 's/MAXSCALE_PORT_SET/YOUR_PORT/g' {} +
-sudo find -type f -exec sed -i 's/MASTER_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-sudo find -type f -exec sed -i 's/SLAVE1_ROOT_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-sudo find -type f -exec sed -i 's/SUPERUSER_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-sudo find -type f -exec sed -i 's/SUPERADMIN_PASSWORD_SET/YOUR_PASSWORD/g' {} +
-```
-
----
-
 ## Change domain PMA
 
 ```shell
 sudo nano /var/lib/mariadb/services/pma/docker-compose.yaml 
 ```
 
----
-
-## Adding port to firewall
-
-```shell
-sudo ufw allow 60330
-sudo ufw allow 58989
-```
 
 ## Move start.sh to safety place
 
@@ -105,6 +79,15 @@ sudo journalctl -u mariadb-repl.service
 ```
 
 ---
+
+
+## Credential dirs
+
+- Get the credential and certs to connect from client (required)
+
+```sh
+cd /etc/secure/mariadb
+```
 
 ## Access
 
