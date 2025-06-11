@@ -4,7 +4,7 @@
 export HOST_SLAVE1="mariadb_slave1"
 export PORT_SLAVE1="3302"
 
-SAVED_ENV_SLAVE1="./slave1-env.saved"
+SAVED_ENV_SLAVE1="$SECURE_DIR/env/slave1/slave1-env.saved"
 
 if [ -f "$SAVED_ENV_SLAVE1" ]; then
    source "$SAVED_ENV_SLAVE1"

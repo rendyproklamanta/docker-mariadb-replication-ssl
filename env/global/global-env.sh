@@ -10,7 +10,7 @@ export MAXSCALE_PORT="60330"
 export SUPERADMIN_USERNAME="super_adm"
 export SUPERUSER_USERNAME="super_usr"
 
-SAVED_ENV_GLOBAL="./global-env.saved"
+SAVED_ENV_GLOBAL="$SECURE_DIR/env/global/global-env.saved"
 
 if [ -f "$SAVED_ENV_GLOBAL" ]; then
    source "$SAVED_ENV_GLOBAL"

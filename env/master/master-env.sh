@@ -4,7 +4,7 @@
 export HOST_MASTER="mariadb_master"
 export PORT_MASTER="3301"
 
-SAVED_ENV_MASTER="./master-env.saved"
+SAVED_ENV_MASTER="$SECURE_DIR/env/master/master-env.saved"
 
 if [ -f "$SAVED_ENV_MASTER" ]; then
    source "$SAVED_ENV_MASTER"
