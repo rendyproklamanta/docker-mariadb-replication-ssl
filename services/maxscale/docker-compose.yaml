@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   maxscale:
-    image: mariadb/maxscale:latest
+    image: mariadb/maxscale:24.02.3
     deploy:
       replicas: 1
       update_config:
