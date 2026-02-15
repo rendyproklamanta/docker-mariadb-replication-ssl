@@ -1,19 +1,13 @@
 [maxscale]
-threads              = auto
-log_augmentation     = 1
-ms_timestamp         = 1
-syslog               = 1
-admin_host           = 0.0.0.0
-admin_port           = 58989
-admin_auth           = 1
-admin_enabled        = 1
-admin_secure_gui     = false
-connect_timeout      = 60        # max time to establish connection to server
-read_timeout         = 600       # max idle read time (matches MariaDB wait_timeout)
-write_timeout        = 600       # max idle write time
-max_packet_size      = 524288000 # 500 MB to match MariaDB max_allowed_packet
-client_idle_timeout  = 0         # disable client idle disconnect
-server_idle_timeout  = 0         # disable server idle disconnect
+threads           = auto
+log_augmentation  = 1
+ms_timestamp      = 1
+syslog            = 1
+admin_host        = 0.0.0.0
+admin_port        = 58989
+admin_auth        = 1
+admin_enabled     = 1
+admin_secure_gui  = false
 
 ########################
 # Server list
